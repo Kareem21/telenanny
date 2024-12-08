@@ -6,7 +6,7 @@ function NannyForm({ onSubmitSuccess }) {
         location: '',
         nationality: '',
         experience: '',
-        languages: '',
+        languages: [],  // Changed to array instead of string
         rate: '',
         email: '',
         phone: '',
@@ -24,6 +24,7 @@ function NannyForm({ onSubmitSuccess }) {
             end: '',
         },
         workingDays: [],
+        introduction: ''
     })
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -121,6 +122,15 @@ function NannyForm({ onSubmitSuccess }) {
         }));
     };
 
+    const toggleLanguage = (lang) => {
+        setFormData(prev => ({
+            ...prev,
+            languages: prev.languages.includes(lang)
+                ? prev.languages.filter(l => l !== lang)
+                : [...prev.languages, lang]
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -130,9 +140,17 @@ function NannyForm({ onSubmitSuccess }) {
             // Append text data
             Object.keys(formData).forEach(key => {
                 if (key === 'profilePic' || key === 'cv') return;
-                if (key === 'workingHours' || key === 'workingDays' || key === 'specialSkills') {
+
+                // Handle arrays and objects
+                if (['workingHours', 'workingDays', 'specialSkills', 'languages'].includes(key)) {
                     formDataToSend.append(key, JSON.stringify(formData[key]));
-                } else {
+                }
+                // Handle boolean
+                else if (key === 'can_travel') {
+                    formDataToSend.append(key, formData[key].toString());
+                }
+                // Handle everything else
+                else {
                     formDataToSend.append(key, formData[key]);
                 }
             })
@@ -145,45 +163,49 @@ function NannyForm({ onSubmitSuccess }) {
                 formDataToSend.append('cv', formData.cv)
             }
 
-            const response = await fetch('http://localhost:5000/api/nannies', {
+            const response = await fetch('http://localhost:5001/api/nannies', {
                 method: 'POST',
                 body: formDataToSend,
             })
 
-            if (response.ok) {
-                alert('Profile created successfully!')
-                onSubmitSuccess()
-                // Reset form
-                setFormData({
-                    name: '',
-                    location: '',
-                    nationality: '',
-                    experience: '',
-                    languages: '',
-                    rate: '',
-                    email: '',
-                    phone: '',
-                    visa_status: '',
-                    availability: '',
-                    age: '',
-                    profilePic: null,
-                    cv: null,
-                    accommodation_preference: 'live-out',
-                    can_travel: false,
-                    education: '',
-                    specialSkills: [],
-                    workingHours: {
-                        start: '',
-                        end: '',
-                    },
-                    workingDays: [],
-                })
-                setProfilePicName('')
-                setCvName('')
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to create profile');
             }
+
+            alert('Profile created successfully!')
+            onSubmitSuccess()
+            // Reset form
+            setFormData({
+                name: '',
+                location: '',
+                nationality: '',
+                experience: '',
+                languages: [],
+                rate: '',
+                email: '',
+                phone: '',
+                visa_status: '',
+                availability: '',
+                age: '',
+                profilePic: null,
+                cv: null,
+                accommodation_preference: 'live-out',
+                can_travel: false,
+                education: '',
+                specialSkills: [],
+                workingHours: {
+                    start: '',
+                    end: '',
+                },
+                workingDays: [],
+                introduction: ''
+            });
+            setProfilePicName('')
+            setCvName('')
         } catch (error) {
             console.error('Error creating profile:', error)
-            setErrorMessage('Error creating profile')
+            setErrorMessage(error.message || 'Error creating profile')
         }
     }
 
@@ -303,12 +325,7 @@ function NannyForm({ onSubmitSuccess }) {
                                 key={lang}
                                 type="button"
                                 className={`chip ${formData.languages.includes(lang) ? 'selected' : ''}`}
-                                onClick={() => {
-                                    const updatedLanguages = formData.languages.includes(lang)
-                                        ? formData.languages.split(',').filter(l => l !== lang).join(',')
-                                        : formData.languages ? `${formData.languages},${lang}` : lang;
-                                    setFormData({...formData, languages: updatedLanguages});
-                                }}
+                                onClick={() => toggleLanguage(lang)}
                             >
                                 {lang}
                             </button>
