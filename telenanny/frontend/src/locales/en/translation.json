@@ -1,0 +1,40 @@
+{
+  "navbar": {
+    "title": "TeleNanny",
+    "beNanny": "I'm a nanny",
+    "findNanny": "I'm looking for a nanny"
+  },
+  "home": {
+    "welcome": "Welcome to TeleNanny",
+    "selectType": "Please select your account type to continue",
+    "featured": "Featured Nannies",
+    "testimonials": "What Our Users Say"
+  },
+  "nannyForm": {
+    "title": "Register as a Nanny",
+    "personalInfo": "Personal Information",
+    "name": "Full Name",
+    "age": "Age",
+    "nationality": "Nationality",
+    "location": "Location",
+    "profilePic": "Profile Picture",
+    "contact": "Contact Information",
+    "email": "Email",
+    "phone": "Phone",
+    "professional": "Professional Information",
+    "experience": "Experience (years)",
+    "languages": "Languages",
+    "skills": "Special Skills",
+    "rate": "Monthly Rate (AED)",
+    "education": "Education Level",
+    "cv": "CV Upload"
+  },
+  "seekerForm": {
+    "title": "Find Your Ideal Nanny",
+    "budget": "Budget Range (AED/month)",
+    "minBudget": "Minimum",
+    "maxBudget": "Maximum",
+    "reqLanguages": "Languages Required",
+    "prefNationalities": "Preferred Nationalities"
+  }
+}
