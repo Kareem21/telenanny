@@ -1,12 +1,28 @@
-import { useState } from 'react'
+// NannyForm.jsx
+import { useState, useEffect } from 'react';
+import { useAuth } from './AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
+
 
 function NannyForm({ onSubmitSuccess }) {
+    const { user, session } = useAuth();
+
+    useEffect(() => {
+        if (!user) {
+            console.error('User not authenticated');
+        }
+        console.log('User ID from AuthContext:', user?.id);
+        console.log('Session Token:', session?.access_token);
+
+
+    }, [user]);
+
     const [formData, setFormData] = useState({
         name: '',
         location: '',
         nationality: '',
         experience: '',
-        languages: [],  // Changed to array instead of string
+        languages: [],
         rate: '',
         email: '',
         phone: '',
@@ -19,13 +35,8 @@ function NannyForm({ onSubmitSuccess }) {
         can_travel: false,
         education: '',
         specialSkills: [],
-        workingHours: {
-            start: '',
-            end: '',
-        },
-        workingDays: [],
         introduction: ''
-    })
+    });
 
     const [errorMessage, setErrorMessage] = useState('');
     const [profilePicName, setProfilePicName] = useState('');
@@ -69,48 +80,53 @@ function NannyForm({ onSubmitSuccess }) {
         'Al Barsha',
         'Other'
     ];
-    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const handleFileChange = (e, fileType) => {
         const file = e.target.files[0];
         if (file) {
-            // Profile pic validation
+            // Create filename based on nanny's name
+            const nameForFile = formData.name.replace(/\s+/g, ''); // Remove spaces from name
+            const fileExtension = file.name.split('.').pop(); // Get original file extension
+
             if (fileType === 'profilePic') {
                 if (!file.type.match('image.*')) {
                     setErrorMessage('Please upload an image file');
                     return;
                 }
-                if (file.size > 5 * 1024 * 1024) { // 5MB
+                if (file.size > 5 * 1024 * 1024) {
                     setErrorMessage('Image must be less than 5MB');
                     return;
                 }
-                setFormData({ ...formData, profilePic: file });
-                setProfilePicName(file.name);
-            }
-            // CV validation
-            else if (fileType === 'cv') {
+
+                // Create a new File object with the custom name
+                const renamedFile = new File([file],
+                    `${nameForFile}_profile.${fileExtension}`,
+                    { type: file.type }
+                );
+
+                setFormData({ ...formData, profilePic: renamedFile });
+                setProfilePicName(renamedFile.name);
+            } else if (fileType === 'cv') {
                 if (!file.type.match('application/pdf|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
                     setErrorMessage('Please upload a PDF or Word document');
                     return;
                 }
-                if (file.size > 5 * 1024 * 1024) { // 5MB
+                if (file.size > 5 * 1024 * 1024) {
                     setErrorMessage('File must be less than 5MB');
                     return;
                 }
-                setFormData({ ...formData, cv: file });
-                setCvName(file.name);
+
+                // Create a new File object with the custom name
+                const renamedFile = new File([file],
+                    `${nameForFile}_cv.${fileExtension}`,
+                    { type: file.type }
+                );
+
+                setFormData({ ...formData, cv: renamedFile });
+                setCvName(renamedFile.name);
             }
             setErrorMessage('');
         }
-    }
-
-    const toggleWorkingDay = (day) => {
-        setFormData(prev => ({
-            ...prev,
-            workingDays: prev.workingDays.includes(day)
-                ? prev.workingDays.filter(d => d !== day)
-                : [...prev.workingDays, day]
-        }));
     };
 
     const toggleSkill = (skill) => {
@@ -132,49 +148,67 @@ function NannyForm({ onSubmitSuccess }) {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
+        if (!user?.id) {
+            setErrorMessage('You must be logged in to create a profile');
+            return;
+        }
 
         try {
-            const formDataToSend = new FormData()
+            const formDataToSend = new FormData();
 
-            // Append text data
+            // Add user_id from auth
+            formDataToSend.append('user_id', user.id);
+
+            // Convert numeric fields
+            const numericFields = ['age', 'experience', 'rate'];
             Object.keys(formData).forEach(key => {
                 if (key === 'profilePic' || key === 'cv') return;
 
-                // Handle arrays and objects
-                if (['workingHours', 'workingDays', 'specialSkills', 'languages'].includes(key)) {
+                if (numericFields.includes(key)) {
+                    formDataToSend.append(key, Number(formData[key]));
+                }
+                else if (['specialSkills', 'languages'].includes(key)) {
                     formDataToSend.append(key, JSON.stringify(formData[key]));
                 }
-                // Handle boolean
                 else if (key === 'can_travel') {
                     formDataToSend.append(key, formData[key].toString());
                 }
-                // Handle everything else
                 else {
                     formDataToSend.append(key, formData[key]);
                 }
-            })
+            });
 
-            // Append files
             if (formData.profilePic) {
-                formDataToSend.append('profilePic', formData.profilePic)
+                formDataToSend.append('profilePic', formData.profilePic);
             }
             if (formData.cv) {
-                formDataToSend.append('cv', formData.cv)
+                formDataToSend.append('cv', formData.cv);
             }
 
             const response = await fetch('http://localhost:5001/api/nannies', {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${session?.access_token}`,
+                },
                 body: formDataToSend,
-            })
+            });
+
+
+
+            console.log("Session after end : ",session)
+            console.log('User ID:', user.id);
+
 
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to create profile');
             }
 
-            alert('Profile created successfully!')
-            onSubmitSuccess()
+            onSubmitSuccess();
+            alert('Profile created successfully!');
+
             // Reset form
             setFormData({
                 name: '',
@@ -194,19 +228,20 @@ function NannyForm({ onSubmitSuccess }) {
                 can_travel: false,
                 education: '',
                 specialSkills: [],
-                workingHours: {
-                    start: '',
-                    end: '',
-                },
-                workingDays: [],
                 introduction: ''
             });
-            setProfilePicName('')
-            setCvName('')
+            setProfilePicName('');
+            setCvName('');
+            console.log('User ID end : ', user.id);
+
         } catch (error) {
-            console.error('Error creating profile:', error)
-            setErrorMessage(error.message || 'Error creating profile')
+            console.error('Error creating profile:', error);
+            setErrorMessage(error.message || 'Error creating profile');
         }
+    };
+
+    if (!user) {
+        return <div className="error-message">Please log in to create a nanny profile.</div>;
     }
 
     return (
@@ -432,45 +467,6 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
 
                 <div className="form-group">
-                    <label>Working Hours</label>
-                    <div className="time-inputs">
-                        <input
-                            type="time"
-                            value={formData.workingHours.start}
-                            onChange={(e) => setFormData({
-                                ...formData,
-                                workingHours: {...formData.workingHours, start: e.target.value}
-                            })}
-                        />
-                        <span>to</span>
-                        <input
-                            type="time"
-                            value={formData.workingHours.end}
-                            onChange={(e) => setFormData({
-                                ...formData,
-                                workingHours: {...formData.workingHours, end: e.target.value}
-                            })}
-                        />
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <label>Working Days</label>
-                    <div className="days-selection">
-                        {DAYS.map(day => (
-                            <button
-                                key={day}
-                                type="button"
-                                className={`day-chip ${formData.workingDays.includes(day) ? 'selected' : ''}`}
-                                onClick={() => toggleWorkingDay(day)}
-                            >
-                                {day.slice(0, 3)}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="form-group">
                     <label className="checkbox-label">
                         <input
                             type="checkbox"
@@ -481,6 +477,7 @@ function NannyForm({ onSubmitSuccess }) {
                     </label>
                 </div>
             </div>
+
             <div className="form-section">
                 <h3>Additional Information</h3>
                 <div className="form-group">
@@ -494,13 +491,14 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
+
             <div className="form-submit">
                 <button type="submit" className="submit-button">
                     Create Profile
                 </button>
             </div>
         </form>
-    )
+    );
 }
 
-export default NannyForm
+export default NannyForm;

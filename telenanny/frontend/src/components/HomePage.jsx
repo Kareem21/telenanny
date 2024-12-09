@@ -1,42 +1,44 @@
-// frontend/src/components/HomePage.jsx
+// HomePage.jsx
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage({ onUserTypeSelect }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
+    const navigate = useNavigate();
 
     // Dummy featured profiles
     const featuredProfiles = [
         {
             id: 1,
             name: "Maria S.",
-            nationality: "Filipino",
+            nationality: "Nigerian",
             experience: "5 years",
             languages: ["English", "Filipino", "Arabic"],
             rating: 4.9,
-            photo: "/api/placeholder/100/100",
+            photo: "https://excellencecenter.ae/wp-content/uploads/2024/07/Light-Blue-Travel-to-Dubai-Instagram-Post-42.jpg",
             location: "Dubai Marina",
             specialties: ["Newborn Care", "Cooking", "First Aid Certified"]
         },
         {
             id: 2,
             name: "Anna K.",
-            nationality: "Russian",
+            nationality: "Ethiopian",
             experience: "7 years",
             languages: ["English", "Russian"],
             rating: 4.8,
-            photo: "/api/placeholder/100/100",
+            photo: "https://maidfinder.ae/maid/assets/profiles/446052508_1919538038500256_6255546291029296217_n.webp",
             location: "Palm Jumeirah",
             specialties: ["Child Development", "Swimming", "Educational Activities"]
         },
         {
             id: 3,
             name: "Sarah M.",
-            nationality: "Ethiopian",
+            nationality: "Filipino",
             experience: "4 years",
             languages: ["English", "Arabic"],
             rating: 4.7,
-            photo: "/api/placeholder/100/100",
+            photo: "https://find-nanny-and-maid.com/MaidImage/WhatsApp%20Image%202024-05-02%20at%205_IM_2024050707351630.jpeg",
             location: "Downtown Dubai",
             specialties: ["Special Needs Care", "Homework Help", "Arts & Crafts"]
         }
@@ -45,7 +47,7 @@ function HomePage({ onUserTypeSelect }) {
     // Dummy testimonials
     const testimonials = [
         {
-            text: "Found an amazing nanny through TeleNanny. The platform made it so easy to find the perfect match for our family!",
+            text: "Found an amazing nanny through Dubai Nannies. The platform made it so easy to find the perfect match for our family!",
             author: "Sarah Thompson",
             role: "Mother of two",
             location: "Dubai Marina"
@@ -64,6 +66,16 @@ function HomePage({ onUserTypeSelect }) {
         }
     ];
 
+    const handleNannyClick = () => {
+        onUserTypeSelect('NANNY');
+        navigate('/register-nanny');
+    };
+
+    const handleEmployerClick = () => {
+        onUserTypeSelect('EMPLOYER');
+        navigate('/find-nanny');
+    };
+
     const nextTestimonial = () => {
         setCurrentTestimonial((prev) =>
             prev === testimonials.length - 1 ? 0 : prev + 1
@@ -80,17 +92,17 @@ function HomePage({ onUserTypeSelect }) {
         <div className="homepage">
             {/* Hero Section */}
             <div className="hero-section">
-                <h1>Welcome to TeleNanny</h1>
+                <h1>Welcome to Dubai Nannies!</h1>
                 <p>Please select your account type to continue</p>
                 <div className="user-type-buttons">
                     <button
-                        onClick={() => onUserTypeSelect('NANNY')}
+                        onClick={handleNannyClick}
                         className="btn-primary"
                     >
                         I'm a Nanny
                     </button>
                     <button
-                        onClick={() => onUserTypeSelect('EMPLOYER')}
+                        onClick={handleEmployerClick}
                         className="btn-secondary"
                     >
                         Looking for a Nanny
@@ -98,7 +110,6 @@ function HomePage({ onUserTypeSelect }) {
                 </div>
             </div>
 
-            {/* Featured Profiles Section */}
             <section className="featured-profiles">
                 <h2>Featured Nannies</h2>
                 <div className="profiles-grid">
@@ -112,15 +123,15 @@ function HomePage({ onUserTypeSelect }) {
                                 <div className="languages">
                                     {profile.languages.map(lang => (
                                         <span key={lang} className="language-tag">
-                                            {lang}
-                                        </span>
+                                           {lang}
+                                       </span>
                                     ))}
                                 </div>
                                 <div className="specialties">
                                     {profile.specialties.map(specialty => (
                                         <span key={specialty} className="specialty-tag">
-                                            {specialty}
-                                        </span>
+                                           {specialty}
+                                       </span>
                                     ))}
                                 </div>
                                 <div className="location">
