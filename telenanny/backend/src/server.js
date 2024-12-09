@@ -120,44 +120,47 @@ app.get('/api/nannies', async (req, res) => {
   }
 });
 
-// Get specific nanny
-app.get('/api/nannies/:id', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-        .from('nannies')
-        .select('*')
-        .eq('id', req.params.id)
-        .single();
-
-    if (error) throw error;
-    if (!data) {
-      return res.status(404).json({ error: 'Nanny not found' });
-    }
-    res.json(data);
-  } catch (error) {
-    console.error('Error fetching nanny:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Create new nanny profile
 app.post('/api/nannies', upload.fields([
   { name: 'cv', maxCount: 1 },
   { name: 'profilePic', maxCount: 1 }
 ]), async (req, res) => {
   try {
+
+
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.replace('Bearer ', '');
+
+    if (!token) {
+      return res.status(401).json({ error: 'Missing or invalid token' });
+    }
+
+    // Create a supabase client scoped to this user's token
+    const supabaseForUser = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        }
+    );
+
     // Parse and transform form data
     const nannyData = {
+      user_id: req.body.user_id,
       name: req.body.name,
       location: req.body.location,
       nationality: req.body.nationality,
-      experience: parseInt(req.body.experience),
+      experience: parseInt(req.body.experience, 10),
       languages: safeJSONParse(req.body.languages, []),
       rate: parseFloat(req.body.rate),
       email: req.body.email,
       phone: req.body.phone,
       visa_status: req.body.visa_status,
-      age: parseInt(req.body.age),
+      age: parseInt(req.body.age, 10),
       accommodation_preference: req.body.accommodation_preference,
       can_travel: req.body.can_travel === 'true',
       education: req.body.education,
@@ -167,6 +170,12 @@ app.post('/api/nannies', upload.fields([
       introduction: req.body.introduction
     };
 
+    console.log('req.body at insertion:', req.body);  // Add this line
+    console.log('nannyData.user_id:', nannyData.user_id); // This must match auth.uid()
+    console.log('SERVER SAYS Authorization Header:', req.headers.authorization); // Should contain Bearer token
+    console.log('SERVER SAYS Authenticated User (auth.uid()):', nannyData.user_id);
+
+
     // Validate required fields
     const requiredFields = [
       'name', 'location', 'nationality', 'experience',
@@ -175,7 +184,6 @@ app.post('/api/nannies', upload.fields([
     ];
 
     const missingFields = requiredFields.filter(field => !nannyData[field]);
-
     if (missingFields.length > 0) {
       return res.status(400).json({
         error: `Missing required fields: ${missingFields.join(', ')}`
@@ -203,18 +211,136 @@ app.post('/api/nannies', upload.fields([
       nannyData.cv_file_type = mimeTypeToEnum[req.files.cv[0].mimetype];
     }
 
-    // Insert nanny data into database
-    const { data, error } = await supabase
+    // Insert nanny data into database using the authenticated client
+    const { data, error } = await supabaseForUser
         .from('nannies')
-        .insert([nannyData])
-        .select()
-        .single();
+        .insert([nannyData]);
 
     if (error) throw error;
+
     res.status(201).json(data);
   } catch (error) {
     console.error('Error creating nanny profile:', error);
     res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/api/nannies/profile', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const userId = req.query.user_id;
+
+  console.log('Received Token:', token);
+  console.log('Received user_id:', userId);
+
+  if (!userId) {
+    return res.status(400).json({ error: 'user_id is missing in the request.' });
+  }
+
+  // Validate userId as UUID if needed
+  if (!userId.match(/^[0-9a-fA-F-]{36}$/)) {
+    console.error(`Invalid UUID: ${userId}`);
+    return res.status(400).json({ error: `Invalid UUID format: ${userId}` });
+  }
+
+  // Create a Supabase client to fetch user details
+  const supabaseServer = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+  try {
+    // Fetch user from auth using the token (to get email, etc.)
+    const { data: userData, error: userError } = await supabaseServer.auth.getUser(token);
+
+    if (userError || !userData?.user) {
+      console.error('Error fetching user from token:', userError);
+      return res.status(401).json({ error: 'Invalid or expired token.' });
+    }
+
+    const user = userData.user;
+    // user.email is here
+    // user.user_metadata might contain name, phone, etc.
+
+    // Fetch nanny profile
+    const { data: nannyData, error: profileError } = await supabaseServer
+        .from('nannies')
+        .select('*')
+        .eq('id', 'e6228391-1d43-48ca-aab8-e351d8c75284')
+        .limit(1);
+
+    if (profileError) {
+      console.error('Supabase Error:', profileError.message);
+      return res.status(500).json({ error: 'Failed to fetch profile from database.' });
+    }
+
+    // If we found a nanny profile, return it
+    if (nannyData && nannyData.length > 0) {
+      return res.status(200).json(nannyData[0]);
+    }
+
+    // If no nanny profile found, return some default data from the auth user.
+    // Adjust the fields based on where you store them. Often "name" and "phone"
+    // might be in user.user_metadata if you set them at signup.
+    const defaultProfile = {
+      name: user.user_metadata?.name || '',
+      email: user.email || '',
+      phone: user.user_metadata?.phone || '',
+      rate: '',
+      status: 'not_hired',
+      location: ''
+    };
+
+    return res.status(200).json(defaultProfile);
+
+  } catch (error) {
+    console.error('Server Error:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+app.get('/api/nannies/:id', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+        .from('nannies')
+        .select('*')
+        .eq('id', req.params.id)
+        .single();
+
+    if (error) throw error;
+    if (!data) {
+      return res.status(404).json({ error: 'Nanny not found' });
+    }
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching nanny:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+app.put('/api/nannies/profile', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { user_id, ...profileData } = req.body;
+
+  try {
+    // First get the nanny ID
+    const { data: nannyRecord } = await supabase
+        .from('nannies')
+        .select('id')
+        .eq('user_id', user_id)
+        .single();
+
+    if (!nannyRecord) {
+      return res.status(404).json({ error: 'Nanny record not found' });
+    }
+
+    // Update using the id
+    const { data, error } = await supabase
+        .from('nannies')
+        .update(profileData)
+        .eq('id', nannyRecord.id)
+        .select();
+
+    if (error) throw error;
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
