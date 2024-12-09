@@ -9,10 +9,9 @@ function NannyDashboard() {
         phone: '',
         rate: '',
         status: 'not_hired',
-        location: '',
+        location: ''
     });
     const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -36,12 +35,10 @@ function NannyDashboard() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Fetched profile:', data);
                     setProfile(data);
                 } else {
                     const errorData = await response.json();
-                    console.error('Failed to fetch profile:', errorData);
-                    setErrorMessage(errorData.error || 'Failed to fetch profile.');
+                    setErrorMessage(errorData.error || 'Failed to fetch profile');
                 }
             } catch (error) {
                 console.error('Error fetching profile:', error);
@@ -60,9 +57,6 @@ function NannyDashboard() {
             return;
         }
 
-        setSuccessMessage('');
-        setErrorMessage('');
-
         try {
             const response = await fetch('http://localhost:5001/api/nannies/profile', {
                 method: 'PUT',
@@ -70,14 +64,14 @@ function NannyDashboard() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${session?.access_token}`,
                 },
-                body: JSON.stringify({ ...profile, user_id: user.id ,name: user.name}),
+                body: JSON.stringify({ ...profile, user_id: user.id }),
             });
 
             if (response.ok) {
-                setSuccessMessage('Profile updated successfully!');
+                alert('Profile updated successfully!');
             } else {
                 const errorData = await response.json();
-                setErrorMessage(errorData.error || 'Failed to update profile.');
+                setErrorMessage(errorData.error || 'Failed to update profile');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -86,7 +80,7 @@ function NannyDashboard() {
     };
 
     if (isLoading) {
-        return <div className="loading-message">Loading...</div>;
+        return <div>Loading...</div>;
     }
 
     return (
@@ -97,7 +91,6 @@ function NannyDashboard() {
                 </div>
 
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
-                {successMessage && <div className="success-message">{successMessage}</div>}
 
                 <div className="dashboard-content">
                     <div className="status-section">

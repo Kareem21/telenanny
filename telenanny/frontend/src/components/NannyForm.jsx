@@ -84,9 +84,14 @@ function NannyForm({ onSubmitSuccess }) {
     const handleFileChange = (e, fileType) => {
         const file = e.target.files[0];
         if (file) {
-            // Create filename based on nanny's name
-            const nameForFile = formData.name.replace(/\s+/g, ''); // Remove spaces from name
-            const fileExtension = file.name.split('.').pop(); // Get original file extension
+            if (!formData.name) {
+                setErrorMessage('Please provide a name before uploading a file.');
+                return;
+            }
+
+            // Generate the filename based on the nanny's name
+            const nameForFile = formData.name.replace(/\s+/g, ''); // Remove spaces
+            const fileExtension = file.name.split('.').pop(); // Extract file extension
 
             if (fileType === 'profilePic') {
                 if (!file.type.match('image.*')) {
@@ -98,12 +103,8 @@ function NannyForm({ onSubmitSuccess }) {
                     return;
                 }
 
-                // Create a new File object with the custom name
-                const renamedFile = new File([file],
-                    `${nameForFile}_profile.${fileExtension}`,
-                    { type: file.type }
-                );
-
+                // Rename the file
+                const renamedFile = new File([file], `${nameForFile}_profile.${fileExtension}`, { type: file.type });
                 setFormData({ ...formData, profilePic: renamedFile });
                 setProfilePicName(renamedFile.name);
             } else if (fileType === 'cv') {
@@ -116,18 +117,15 @@ function NannyForm({ onSubmitSuccess }) {
                     return;
                 }
 
-                // Create a new File object with the custom name
-                const renamedFile = new File([file],
-                    `${nameForFile}_cv.${fileExtension}`,
-                    { type: file.type }
-                );
-
+                // Rename the file
+                const renamedFile = new File([file], `${nameForFile}_cv.${fileExtension}`, { type: file.type });
                 setFormData({ ...formData, cv: renamedFile });
                 setCvName(renamedFile.name);
             }
             setErrorMessage('');
         }
     };
+
 
     const toggleSkill = (skill) => {
         setFormData(prev => ({
