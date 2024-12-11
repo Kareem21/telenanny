@@ -11,6 +11,7 @@ import HomePage from './components/HomePage'
 import LoginForm from './components/LoginForm'
 import { useAuth } from './components/AuthContext'
 import './App.css'
+import JobPosting from './components/Jobposting' //
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -87,14 +88,12 @@ function App() {
                 <main className="main-content">
                     <Routes>
                         <Route path="/" element={<HomePage onUserTypeSelect={setUserType} />} />
-
                         <Route
                             path="/register-nanny"
                             element={
                                 session ? <NannyForm onSubmitSuccess={fetchNannies} user={session.user} /> : <LoginForm />
                             }
                         />
-
                         <Route
                             path="/account"
                             element={
@@ -103,7 +102,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-
                         <Route
                             path="/find-nanny"
                             element={
@@ -113,10 +111,15 @@ function App() {
                                 </div>
                             }
                         />
-
                         <Route
                             path="/login"
                             element={<LoginForm />}
+                        />
+
+                        {/* New route for job posting */}
+                        <Route
+                            path="/post-job"
+                            element={<JobPosting />}
                         />
 
                         <Route
@@ -130,7 +133,7 @@ function App() {
                         />
                     </Routes>
                 </main>
-                <Footer></Footer>
+                <Footer />
             </div>
         </Router>
     )

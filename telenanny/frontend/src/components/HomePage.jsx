@@ -7,7 +7,6 @@ function HomePage({ onUserTypeSelect }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const navigate = useNavigate();
 
-    // Dummy featured profiles
     const featuredProfiles = [
         {
             id: 1,
@@ -44,7 +43,6 @@ function HomePage({ onUserTypeSelect }) {
         }
     ];
 
-    // Dummy testimonials
     const testimonials = [
         {
             text: "Found an amazing nanny through Dubai Nannies. The platform made it so easy to find the perfect match for our family!",
@@ -110,45 +108,69 @@ function HomePage({ onUserTypeSelect }) {
                 </div>
             </div>
 
-            <section className="featured-profiles">
-                <h2>Featured Nannies</h2>
-                <div className="profiles-grid">
-                    {featuredProfiles.map(profile => (
-                        <div key={profile.id} className="profile-card">
-                            <img src={profile.photo} alt={profile.name} className="profile-photo" />
-                            <div className="profile-info">
-                                <h3>{profile.name}</h3>
-                                <p className="nationality">{profile.nationality}</p>
-                                <p className="experience">{profile.experience} experience</p>
-                                <div className="languages">
-                                    {profile.languages.map(lang => (
-                                        <span key={lang} className="language-tag">
-                                           {lang}
-                                       </span>
-                                    ))}
-                                </div>
-                                <div className="specialties">
-                                    {profile.specialties.map(specialty => (
-                                        <span key={specialty} className="specialty-tag">
-                                           {specialty}
-                                       </span>
-                                    ))}
-                                </div>
-                                <div className="location">
-                                    <span>{profile.location}</span>
-                                </div>
-                                <div className="rating">
-                                    ⭐ {profile.rating}
+            <div className="dual-section-container">
+                <section className="get-started-section">
+                    <h2>Get Started for FREE</h2>
+                    <p>It’s easy to share what you need in a job post. Families who post are <strong>5x</strong> more likely to find the nanny they need!</p>
+                    <div className="steps-container">
+                        <div className="step-card">
+                            <span className="step-number">1</span>
+                            <h3>You post it</h3>
+                        </div>
+                        <div className="step-arrow">&#8594;</div>
+                        <div className="step-card">
+                            <span className="step-number">2</span>
+                            <h3>Nannies apply</h3>
+                        </div>
+                        <div className="step-arrow">&#8594;</div>
+                        <div className="step-card">
+                            <span className="step-number">3</span>
+                            <h3>Start connecting</h3>
+                        </div>
+                    </div>
+                    <button className="btn-primary" onClick={() => navigate('/post-job')}>START NOW</button>
+                </section>
+
+                <section className="featured-profiles">
+                    <h2>Featured Nannies</h2>
+                    <div className="profiles-grid">
+                        {featuredProfiles.map(profile => (
+                            <div key={profile.id} className="profile-card">
+                                <img src={profile.photo} alt={profile.name} className="profile-photo" />
+                                <div className="profile-info">
+                                    <h3>{profile.name}</h3>
+                                    <p className="nationality">{profile.nationality}</p>
+                                    <p className="experience">{profile.experience} experience</p>
+                                    <div className="languages">
+                                        {profile.languages.map(lang => (
+                                            <span key={lang} className="language-tag">
+                                               {lang}
+                                           </span>
+                                        ))}
+                                    </div>
+                                    <div className="specialties">
+                                        {profile.specialties.map(specialty => (
+                                            <span key={specialty} className="specialty-tag">
+                                               {specialty}
+                                           </span>
+                                        ))}
+                                    </div>
+                                    <div className="location">
+                                        <span>{profile.location}</span>
+                                    </div>
+                                    <div className="rating">
+                                        ⭐ {profile.rating}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
+            </div>
 
             {/* Testimonials Section */}
             <section className="testimonials">
-                <h2>What Our Users Say</h2>
+                <h2>Why Parents Use Telenannies Instead</h2>
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
                         <ChevronLeft />
