@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         detectSessionInUrl: true,
         flowType: 'pkce',
         // Add this redirect configuration
-        redirectTo: 'https://frontendtest-ivory.vercel.app/register-nanny'
+        redirectTo: 'https://dubainannies.vercel.app/register-nanny'
     }
 });
 // Create context with default values
