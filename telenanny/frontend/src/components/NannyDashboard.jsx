@@ -25,7 +25,7 @@ function NannyDashboard() {
 
             try {
                 const response = await fetch(
-                    `http://localhost:5001/api/nannies/profile?user_id=${user.id}`,
+                    `https://server-1prf.onrender.com/api/nannies/profile?user_id=${user.id}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${session?.access_token}`,
@@ -58,7 +58,7 @@ function NannyDashboard() {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/nannies/profile', {
+            const response = await fetch('https://server-1prf.onrender.com/api/nannies/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

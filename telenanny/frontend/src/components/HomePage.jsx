@@ -170,7 +170,7 @@ function HomePage({ onUserTypeSelect }) {
 
             {/* Testimonials Section */}
             <section className="testimonials">
-                <h2>Why Parents Use Telenannies Instead</h2>
+                <h2>Why families Use Dubai Nannies Instead</h2>
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
                         <ChevronLeft />

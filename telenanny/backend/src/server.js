@@ -8,11 +8,20 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: '*',  // Temporarily allow all origins for testing
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Authorization', 'Content-Type', 'X-Client-Info']
+}));app.use(express.json());
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'], // Add your frontend URLs
+  origin: [
+    'http://localhost:3000',          // Local development
+    'http://localhost:5173',          // Vite local development
+    'https://your-frontend-domain.com', // Your deployed frontend URL
+    'https://server-1prf.onrender.com'  // Your Render backend URL
+  ],
   credentials: true
 }));
 
