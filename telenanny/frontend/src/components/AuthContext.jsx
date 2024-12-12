@@ -10,8 +10,16 @@ if (!supabaseUrl || !supabaseKey) {
     throw new Error('Missing Supabase environment variables');
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
-
+const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+        // Add this redirect configuration
+        redirectTo: 'https://frontendtest-ivory.vercel.app/register-nanny'
+    }
+});
 // Create context with default values
 const AuthContext = createContext({
     session: null,
@@ -50,10 +58,12 @@ export const AuthProvider = ({ children }) => {
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
+            async (event, session) => {
                 setSession(session);
                 setUser(session?.user ?? null);
                 setLoading(false);
+
+
             }
         );
 

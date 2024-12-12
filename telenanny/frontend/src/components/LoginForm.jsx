@@ -12,13 +12,15 @@ function LoginForm() {
         setLoading(true);
         setMessage({ text: '', type: '' });
 
+        const redirectUrl = 'https://frontendtest-ivory.vercel.app/register-nanny';
+
         try {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: `${window.location.origin}/auth/callback`,
+                    emailRedirectTo: redirectUrl,
                     data: {
-                        userType: 'NANNY'  // Store user type in auth metadata
+                        userType: 'NANNY'
                     }
                 }
             });
@@ -29,7 +31,7 @@ function LoginForm() {
                 text: 'Check your email for the magic link!',
                 type: 'success'
             });
-            setEmail(''); // Clear email after successful send
+            setEmail('');
         } catch (error) {
             console.error('Login error:', error);
             setMessage({
