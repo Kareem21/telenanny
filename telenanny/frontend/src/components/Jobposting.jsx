@@ -1,32 +1,117 @@
 // src/components/JobPosting.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function JobPosting() {
-    const [rate, setRate] = useState('');
-    const [location, setLocation] = useState('');
-    const [kidsCount, setKidsCount] = useState('');
-    const [notes, setNotes] = useState('');
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        rate: '',
+        location: '',
+        kidsCount: '',
+        notes: '',
+        contactEmail: '',
+        contactPhone: '',
+        employerName: '',
+    });
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you could send the job post data to your backend
-        console.log({ rate, location, kidsCount, notes });
-        alert('Job posted successfully (Dummy submission)!');
+
+        try {
+            // Calculate expiration date (1 month from now)
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 1);
+
+            // Insert into Supabase
+            const { data, error } = await supabase
+                .from('postings')
+                .insert([
+                    {
+                        rate: parseInt(formData.rate),
+                        location: formData.location,
+                        kids_count: parseInt(formData.kidsCount),
+                        notes: formData.notes,
+                        employer_name: formData.employerName,
+                        contact_email: formData.contactEmail,
+                        contact_phone: formData.contactPhone,
+                        expiry_date: expiryDate.toISOString(),
+                        status: 'active'
+                    }
+                ])
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Store posting ID in local storage for reference
+            localStorage.setItem('lastPosting', data.id);
+
+            // Redirect to success page
+            navigate(`/posting-success/${data.id}`);
+        } catch (error) {
+            console.error('Error creating posting:', error);
+            alert('Failed to create posting. Please try again.');
+        }
     };
 
     return (
         <div className="job-posting-container">
             <h1>Post Your Job</h1>
-            <p>It’s free for the first month. After that, it’s 99 AED per post (valid for 1 month).</p>
+            <p>It's free for the first month. After that, it's 99 AED per post (valid for 1 month).</p>
+
             <form onSubmit={handleSubmit} className="job-posting-form">
                 <div className="form-group">
-                    <label htmlFor="rate">Rate you're offering (AED/hour):</label>
+                    <label htmlFor="employerName">Your Name:</label>
+                    <input
+                        type="text"
+                        id="employerName"
+                        value={formData.employerName}
+                        onChange={handleChange}
+                        placeholder="Your full name"
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="contactEmail">Contact Email:</label>
+                    <input
+                        type="email"
+                        id="contactEmail"
+                        value={formData.contactEmail}
+                        onChange={handleChange}
+                        placeholder="your@email.com"
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="contactPhone">Contact Phone:</label>
+                    <input
+                        type="tel"
+                        id="contactPhone"
+                        value={formData.contactPhone}
+                        onChange={handleChange}
+                        placeholder="Your phone number"
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="rate">Rate you're offering (AED/month):</label>
                     <input
                         type="number"
                         id="rate"
-                        value={rate}
-                        onChange={(e) => setRate(e.target.value)}
-                        placeholder="e.g. 50"
+                        value={formData.rate}
+                        onChange={handleChange}
+                        placeholder="e.g. 5000"
                         required
                     />
                 </div>
@@ -36,8 +121,8 @@ function JobPosting() {
                     <input
                         type="text"
                         id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        value={formData.location}
+                        onChange={handleChange}
                         placeholder="e.g. Dubai Marina"
                         required
                     />
@@ -48,8 +133,8 @@ function JobPosting() {
                     <input
                         type="number"
                         id="kidsCount"
-                        value={kidsCount}
-                        onChange={(e) => setKidsCount(e.target.value)}
+                        value={formData.kidsCount}
+                        onChange={handleChange}
                         placeholder="e.g. 2"
                         required
                     />
@@ -59,9 +144,9 @@ function JobPosting() {
                     <label htmlFor="notes">Additional Notes / Requirements (optional):</label>
                     <textarea
                         id="notes"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="e.g. Looking for someone with CPR training, good with toddlers..."
+                        value={formData.notes}
+                        onChange={handleChange}
+                    Ï    placeholder="e.g. Looking for someone with CPR training, good with toddlers..."
                     />
                 </div>
 

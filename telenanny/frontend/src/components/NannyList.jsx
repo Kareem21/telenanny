@@ -11,7 +11,7 @@ function NannyList({ nannies }) {
                     <p>Location: {nanny.location}</p>
                     <p>Experience: {nanny.experience}</p>
                     <p>Languages: {nanny.languages.join(', ')}</p>
-                    <p>Rate: {nanny.rate} AED/hour</p>
+                    <p>Rate: {nanny.rate} AED/month</p>
                     <button
                         onClick={() => window.location.href = `mailto:${nanny.email}`}
                         className="submit-button"
