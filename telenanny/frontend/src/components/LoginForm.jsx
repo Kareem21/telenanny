@@ -12,7 +12,7 @@ function LoginForm() {
         setLoading(true);
         setMessage({ text: '', type: '' });
 
-        const redirectUrl = 'https://frontendtest-ivory.vercel.app/register-nanny';
+        const redirectUrl = 'https://dubainannies.vercel.app/register-nanny';
 
         try {
             const { error } = await supabase.auth.signInWithOtp({
