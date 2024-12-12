@@ -13,7 +13,8 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://frontendtest-ivory.vercel.app',   // Your frontend URL
+    'https://dubainannies.vercel.app',
+    'https://frontendtest-ivory.vercel.app',// Your frontend URL
     'https://server-1prf.onrender.com',  // Your backend URL
     'https://ejbiorpholetwkprfrfj.supabase.co'  // Your Supabase project URL
   ],
