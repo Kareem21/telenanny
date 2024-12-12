@@ -46,7 +46,7 @@ function LoginForm() {
     return (
         <div className="login-container">
             <div className="login-card">
-                <h2>Sign in to TeleNanny</h2>
+                <h2>Sign in to Dubai Nannies</h2>
                 <p className="login-subtitle">
                     Enter your email to receive a magic link
                 </p>

@@ -85,23 +85,29 @@ function HomePage({ onUserTypeSelect }) {
             prev === 0 ? testimonials.length - 1 : prev - 1
         );
     };
+    const handleStartNow = (e) => {
+        e.preventDefault();
+        window.scrollTo(0, 0);  // Reset scroll position before navigation
+        navigate('/post-job');
+    };
 
     return (
         <div className="homepage">
             {/* Hero Section */}
+            {/* Hero Section */}
             <div className="hero-section">
-                <h1>Welcome to Dubai Nannies!</h1>
-                <p>Please select your account type to continue</p>
+                <h1 className="hero-title">Welcome to Dubai Nannies!</h1>
+                <p className="hero-subtitle">Please select your account type to continue</p>
                 <div className="user-type-buttons">
                     <button
                         onClick={handleNannyClick}
-                        className="btn-primary"
+                        className="user-type-btn btn-primary"
                     >
                         I'm a Nanny
                     </button>
                     <button
                         onClick={handleEmployerClick}
-                        className="btn-secondary"
+                        className="user-type-btn btn-secondary"
                     >
                         Looking for a Nanny
                     </button>
@@ -128,8 +134,8 @@ function HomePage({ onUserTypeSelect }) {
                             <h3>Start connecting</h3>
                         </div>
                     </div>
-                    <button className="btn-primary" onClick={() => navigate('/post-job')}>START NOW</button>
-                </section>
+                    <button className="btn-primary" onClick={handleStartNow}>START NOW</button>
+              </section>
 
                 <section className="featured-profiles">
                     <h2>Featured Nannies</h2>
@@ -170,7 +176,11 @@ function HomePage({ onUserTypeSelect }) {
 
             {/* Testimonials Section */}
             <section className="testimonials">
+<<<<<<< HEAD
+                <h2>Why Parents Use Dubai nannies Instead</h2>
+=======
                 <h2>Why families Use Dubai Nannies Instead</h2>
+>>>>>>> ad768c50d30204ff4418a4073cb9561524ab64e1
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
                         <ChevronLeft />
