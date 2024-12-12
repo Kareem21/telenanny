@@ -176,7 +176,11 @@ function HomePage({ onUserTypeSelect }) {
 
             {/* Testimonials Section */}
             <section className="testimonials">
+<<<<<<< HEAD
                 <h2>Why Parents Use Dubai nannies Instead</h2>
+=======
+                <h2>Why families Use Dubai Nannies Instead</h2>
+>>>>>>> ad768c50d30204ff4418a4073cb9561524ab64e1
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
                         <ChevronLeft />

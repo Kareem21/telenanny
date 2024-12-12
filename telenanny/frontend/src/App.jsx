@@ -34,7 +34,7 @@ function App() {
 
     const fetchNannies = async () => {
         try {
-            const response = await fetch('http://localhost:5001/api/nannies')
+            const response = await fetch('https://server-1prf.onrender.com/api/nannies')
             const data = await response.json()
             setNannies(data)
             setFilteredNannies(data)
