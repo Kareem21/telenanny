@@ -1,14 +1,16 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate environment variables
 if (!supabaseUrl || !supabaseKey) {
     throw new Error('Missing Supabase environment variables');
 }
+
+// Define base URL and callback URL
+const BASE_URL = 'https://dubainannies.vercel.app';
+const AUTH_CALLBACK_URL = `${BASE_URL}/auth/callback`;
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
@@ -16,17 +18,21 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         persistSession: true,
         detectSessionInUrl: true,
         flowType: 'pkce',
-        // Add this redirect configuration
-        redirectTo: 'https://dubainannies.vercel.app/register-nanny'
+        redirectTo: AUTH_CALLBACK_URL  // Use the callback URL instead
     }
 });
-// Create context with default values
+
 const AuthContext = createContext({
     session: null,
     user: null,
     loading: true,
     supabase: null,
     signOut: async () => {},
+    // Add the base URL and callback URL to the context
+    urls: {
+        base: BASE_URL,
+        callback: AUTH_CALLBACK_URL
+    }
 });
 
 export const AuthProvider = ({ children }) => {
@@ -35,7 +41,6 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Get initial session
         const initializeAuth = async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
@@ -53,20 +58,14 @@ export const AuthProvider = ({ children }) => {
         };
         initializeAuth();
 
-
-
-        // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setSession(session);
                 setUser(session?.user ?? null);
                 setLoading(false);
-
-
             }
         );
 
-        // Cleanup subscription
         return () => {
             subscription.unsubscribe();
         };
@@ -75,12 +74,12 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (session) {
             console.log('Session:', session);
-            console.log('AUTHCONTEXT User ID (auth.uid()):', session.user.id); // This should match `auth.uid()`
+            console.log('AUTHCONTEXT User ID (auth.uid()):', session.user.id);
         } else {
-            console.error('AUTHCONTEXT No active session.');
+            console.log('AUTHCONTEXT No active session.');
         }
     }, [session]);
-    // Sign out function
+
     const signOut = async () => {
         try {
             const { error } = await supabase.auth.signOut();
@@ -93,7 +92,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Context value
     const value = {
         session,
         user,
@@ -101,8 +99,12 @@ export const AuthProvider = ({ children }) => {
         supabase,
         signOut,
         isAuthenticated: !!session,
+        // Include the URLs in the context value
+        urls: {
+            base: BASE_URL,
+            callback: AUTH_CALLBACK_URL
+        }
     };
-
 
     return (
         <AuthContext.Provider value={value}>
@@ -111,7 +113,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {

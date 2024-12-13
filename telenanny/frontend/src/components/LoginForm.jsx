@@ -5,22 +5,21 @@ function LoginForm() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
-    const { supabase } = useAuth();
+    const { supabase, urls } = useAuth();  // Get urls from context
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage({ text: '', type: '' });
 
-        const redirectUrl = 'https://dubainannies.vercel.app/register-nanny';
-
         try {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: redirectUrl,
+                    emailRedirectTo: urls.callback,  // Use the callback URL from context
                     data: {
-                        userType: 'NANNY'
+                        userType: 'NANNY',
+                        intendedDestination: '/register-nanny'
                     }
                 }
             });
@@ -42,7 +41,6 @@ function LoginForm() {
             setLoading(false);
         }
     };
-
     return (
         <div className="login-container">
             <div className="login-card">
