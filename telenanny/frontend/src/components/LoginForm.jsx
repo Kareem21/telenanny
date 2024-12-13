@@ -1,55 +1,97 @@
 import { useState } from 'react';
 import { useAuth } from './AuthContext.jsx';
 
-function LoginForm() {
+function AuthForm() {
     const [email, setEmail] = useState('');
+    const [isNewUser, setIsNewUser] = useState(false); // Checkbox for new users
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
-    const { supabase, urls } = useAuth();  // Get urls from context
+    const { supabase, urls } = useAuth();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage({ text: '', type: '' });
-
+    // Handle signup for new users
+    const handleSignup = async (email) => {
         try {
-            const { error } = await supabase.auth.signInWithOtp({
+            const { data, error } = await supabase.auth.signUp({
                 email,
                 options: {
-                    emailRedirectTo: urls.callback,  // Use the callback URL from context
+                    emailRedirectTo: urls.callback, // Use the callback URL from context
                     data: {
                         userType: 'NANNY',
                         intendedDestination: '/register-nanny'
                     }
-                }
+                },
             });
 
-            if (error) throw error;
+            if (error) {
+                throw error;
+            }
 
             setMessage({
-                text: 'Check your email for the magic link!',
-                type: 'success'
+                text: 'Signup successful! Check your email to confirm your account.',
+                type: 'success',
+            });
+            setEmail('');
+        } catch (error) {
+            console.error('Signup error:', error);
+            setMessage({
+                text: 'Failed to sign up. Please try again.',
+                type: 'error',
+            });
+        }
+    };
+
+    // Handle login for existing users
+    const handleLogin = async (email) => {
+        try {
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: {
+                    emailRedirectTo: urls.callback, // Use the callback URL from context
+                    data: {
+                        userType: 'NANNY',
+                        intendedDestination: '/register-nanny'
+                    }
+                },
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            setMessage({
+                text: 'Magic link sent! Check your email to log in.',
+                type: 'success',
             });
             setEmail('');
         } catch (error) {
             console.error('Login error:', error);
             setMessage({
                 text: 'Failed to send login link. Please try again.',
-                type: 'error'
+                type: 'error',
             });
-        } finally {
-            setLoading(false);
         }
     };
-    return (
-        <div className="login-container">
-            <div className="login-card">
-                <h2>Sign in to Dubai Nannies</h2>
-                <p className="login-subtitle">
-                    Enter your email to receive a magic link
-                </p>
 
-                <form onSubmit={handleLogin} className="login-form">
+    // General handler to switch between signup and login
+    const handleAuth = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage({ text: '', type: '' });
+
+        if (isNewUser) {
+            await handleSignup(email);
+        } else {
+            await handleLogin(email);
+        }
+
+        setLoading(false);
+    };
+
+    return (
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2>{isNewUser ? 'Sign up' : 'Log in'} to Dubai Nannies</h2>
+                <form onSubmit={handleAuth} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="email">Email address</label>
                         <input
@@ -58,10 +100,21 @@ function LoginForm() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="you@example.com"
-                            className="login-input"
+                            className="auth-input"
                             required
                             disabled={loading}
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isNewUser}
+                                onChange={() => setIsNewUser(!isNewUser)}
+                            />
+                            I am a new user
+                        </label>
                     </div>
 
                     {message.text && (
@@ -72,26 +125,19 @@ function LoginForm() {
 
                     <button
                         type="submit"
-                        className="login-button"
+                        className="auth-button"
                         disabled={loading || !email}
                     >
                         {loading ? (
-                            <span>Sending link...</span>
+                            <span>{isNewUser ? 'Signing up...' : 'Sending link...'}</span>
                         ) : (
-                            <span>Send magic link</span>
+                            <span>{isNewUser ? 'Sign up' : 'Log in'}</span>
                         )}
                     </button>
-
-                    <div className="login-info">
-                        <p>
-                            We'll send you a secure link to sign in instantly.
-                            No password needed!
-                        </p>
-                    </div>
                 </form>
             </div>
         </div>
     );
 }
 
-export default LoginForm;
+export default AuthForm;
