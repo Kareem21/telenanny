@@ -4,6 +4,10 @@
   --primary-hover: #1d4ed8;
   --bg-color: #f8fafc;
   --text-color: #1e293b;
+  --footer-bg: #1a365d;
+  --footer-text: #ffffff;
+  --footer-link: #90cdf4;
+  --footer-link-hover: #ffffff;
 }
 
 /* Reset and Base styles */
@@ -357,48 +361,47 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Profile Tags */
-.languages, .special-skills {
+/* Languages and Special Skills */
+.languages,
+.special-skills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-start;
-  margin-top: 10px;
+  gap: 0.75rem;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
-.languages span, .special-skills span {
-  background-color: #e5e7eb;
-  color: #1f2937;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  border: 1px solid #d1d5db;
+.languages span,
+.special-skills span {
+  background-color: #f8fafc;
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--primary-color);
   text-align: center;
   cursor: default;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
 }
 
-.languages, .specialties {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin: 0.5rem 0;
+.languages span:hover,
+.special-skills span:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.language-tag {
-  background: #e0f2fe;
+.special-skills span {
+  background-color: #f0f9ff;
+  border-color: #0369a1;
   color: #0369a1;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
 }
 
-.specialty-tag {
-  background: #f0fdf4;
-  color: #166534;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+.special-skills span:hover {
+  background-color: #0369a1;
+  color: white;
 }
 
 .location {
@@ -556,6 +559,7 @@ body {
   background: #fff;
   padding: 2rem;
   border-radius: 8px;
+  /* Job Posting continued */
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   text-align: left;
 }
@@ -733,8 +737,8 @@ body {
 
 /* Footer */
 .footer {
-  background-color: #1a365d;
-  color: white;
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
   padding: 4rem 0 2rem 0;
   margin-top: auto;
   width: 100%;
@@ -758,15 +762,21 @@ body {
 }
 
 .footer-logo {
-  color: white;
+  color: var(--footer-text);
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: bold;
+  transition: opacity 0.2s ease;
+}
+
+.footer-logo:hover {
+  opacity: 0.9;
 }
 
 .footer-tagline {
   font-size: 1.1rem;
-  color: #e2e8f0;
+  color: var(--footer-text);
+  opacity: 0.9;
   line-height: 1.6;
 }
 
@@ -774,7 +784,7 @@ body {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #90cdf4;
+  color: var(--footer-link);
 }
 
 .footer-section ul {
@@ -782,19 +792,38 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .footer-section ul li a {
-  color: #90cdf4;
+  color: var(--footer-link);
   text-decoration: none;
   font-size: 0.9rem;
-  transition: color 0.3s ease-in-out;
+  transition: all 0.2s ease;
+  display: inline-block;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.footer-section ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--footer-link-hover);
+  transition: width 0.2s ease;
 }
 
 .footer-section ul li a:hover {
-  color: #ffffff;
+  color: var(--footer-link-hover);
 }
+
+.footer-section ul li a:hover::after {
+  width: 100%;
+}
+
 /* Layout Containers */
 .dual-section-container {
   display: flex;
@@ -886,9 +915,29 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .languages,
+  .special-skills {
+    gap: 0.5rem;
+  }
+
+  .languages span,
+  .special-skills span {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+    text-align: center;
+  }
+
+  .footer-section ul {
+    align-items: center;
+  }
+
+  .footer-section {
+    align-items: center;
   }
 
   .testimonial-slider {
