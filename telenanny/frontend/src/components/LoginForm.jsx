@@ -3,45 +3,16 @@ import { useAuth } from './AuthContext.jsx';
 
 function AuthForm() {
     const [email, setEmail] = useState('');
-    const [isNewUser, setIsNewUser] = useState(false); // Checkbox for new users
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const { supabase, urls } = useAuth();
 
-    // Handle signup for new users
-    const handleSignup = async (email) => {
-        try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                options: {
-                    emailRedirectTo: urls.callback, // Use the callback URL from context
-                    data: {
-                        userType: 'NANNY',
-                        intendedDestination: '/register-nanny'
-                    }
-                },
-            });
+    // Handle login with magic link
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage({ text: '', type: '' });
 
-            if (error) {
-                throw error;
-            }
-
-            setMessage({
-                text: 'Signup successful! Check your email to confirm your account.',
-                type: 'success',
-            });
-            setEmail('');
-        } catch (error) {
-            console.error('Signup error:', error);
-            setMessage({
-                text: 'Failed to sign up. Please try again.',
-                type: 'error',
-            });
-        }
-    };
-
-    // Handle login for existing users
-    const handleLogin = async (email) => {
         try {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
@@ -69,29 +40,16 @@ function AuthForm() {
                 text: 'Failed to send login link. Please try again.',
                 type: 'error',
             });
+        } finally {
+            setLoading(false);
         }
-    };
-
-    // General handler to switch between signup and login
-    const handleAuth = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage({ text: '', type: '' });
-
-        if (isNewUser) {
-            await handleSignup(email);
-        } else {
-            await handleLogin(email);
-        }
-
-        setLoading(false);
     };
 
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h2>{isNewUser ? 'Sign up' : 'Log in'} to Dubai Nannies</h2>
-                <form onSubmit={handleAuth} className="auth-form">
+                <h2>Log in to Dubai Nannies</h2>
+                <form onSubmit={handleLogin} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="email">Email address</label>
                         <input
@@ -106,17 +64,6 @@ function AuthForm() {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={isNewUser}
-                                onChange={() => setIsNewUser(!isNewUser)}
-                            />
-                            I am a new user
-                        </label>
-                    </div>
-
                     {message.text && (
                         <div className={`message ${message.type}`}>
                             {message.text}
@@ -129,9 +76,9 @@ function AuthForm() {
                         disabled={loading || !email}
                     >
                         {loading ? (
-                            <span>{isNewUser ? 'Signing up...' : 'Sending link...'}</span>
+                            <span>Sending link...</span>
                         ) : (
-                            <span>{isNewUser ? 'Sign up' : 'Log in'}</span>
+                            <span>Send magic link</span>
                         )}
                     </button>
                 </form>
