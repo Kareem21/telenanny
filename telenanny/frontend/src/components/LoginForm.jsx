@@ -19,7 +19,6 @@ function AuthForm() {
                 options: {
                     emailRedirectTo: urls.callback, // Use the callback URL from context
                     data: {
-                        userType: 'NANNY',
                         intendedDestination: '/register-nanny'
                     }
                 },
