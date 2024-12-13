@@ -4,10 +4,6 @@
   --primary-hover: #1d4ed8;
   --bg-color: #f8fafc;
   --text-color: #1e293b;
-  --footer-bg: #1a365d;
-  --footer-text: #ffffff;
-  --footer-link: #90cdf4;
-  --footer-link-hover: #ffffff;
 }
 
 /* Reset and Base styles */
@@ -361,47 +357,29 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Languages and Special Skills */
-.languages,
-.special-skills {
+/* Profile Tags */
+.languages, .specialties {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   justify-content: center;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
-.languages span,
-.special-skills span {
-  background-color: #f8fafc;
-  color: var(--primary-color);
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-size: 0.875rem;
-  border: 1px solid var(--primary-color);
-  text-align: center;
-  cursor: default;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
-}
-
-.languages span:hover,
-.special-skills span:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.special-skills span {
-  background-color: #f0f9ff;
-  border-color: #0369a1;
+.language-tag {
+  background: #e0f2fe;
   color: #0369a1;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
-.special-skills span:hover {
-  background-color: #0369a1;
-  color: white;
+.specialty-tag {
+  background: #f0fdf4;
+  color: #166534;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .location {
@@ -559,7 +537,6 @@ body {
   background: #fff;
   padding: 2rem;
   border-radius: 8px;
-  /* Job Posting continued */
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   text-align: left;
 }
@@ -737,8 +714,8 @@ body {
 
 /* Footer */
 .footer {
-  background-color: var(--footer-bg);
-  color: var(--footer-text);
+  background-color: #1a365d;
+  color: white;
   padding: 4rem 0 2rem 0;
   margin-top: auto;
   width: 100%;
@@ -762,21 +739,15 @@ body {
 }
 
 .footer-logo {
-  color: var(--footer-text);
+  color: white;
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: bold;
-  transition: opacity 0.2s ease;
-}
-
-.footer-logo:hover {
-  opacity: 0.9;
 }
 
 .footer-tagline {
   font-size: 1.1rem;
-  color: var(--footer-text);
-  opacity: 0.9;
+  color: #e2e8f0;
   line-height: 1.6;
 }
 
@@ -784,7 +755,7 @@ body {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--footer-link);
+  color: #90cdf4;
 }
 
 .footer-section ul {
@@ -792,36 +763,18 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .footer-section ul li a {
-  color: var(--footer-link);
+  color: #e2e8f0;
   text-decoration: none;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  display: inline-block;
-  position: relative;
-  padding-bottom: 2px;
-}
-
-.footer-section ul li a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--footer-link-hover);
-  transition: width 0.2s ease;
+  transition: color 0.3s ease;
+  font-size: 1rem;
 }
 
 .footer-section ul li a:hover {
-  color: var(--footer-link-hover);
-}
-
-.footer-section ul li a:hover::after {
-  width: 100%;
+  color: #90cdf4;
 }
 
 /* Layout Containers */
@@ -915,29 +868,9 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .languages,
-  .special-skills {
-    gap: 0.5rem;
-  }
-
-  .languages span,
-  .special-skills span {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.8rem;
-  }
-
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
-    text-align: center;
-  }
-
-  .footer-section ul {
-    align-items: center;
-  }
-
-  .footer-section {
-    align-items: center;
   }
 
   .testimonial-slider {
