@@ -9,7 +9,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 // Define base URL and callback URL
-const BASE_URL = 'https://dubainannies.vercel.app';
+const BASE_URL = 'https://nanniestest2-lbgwqeokw-kareems-projects-d3c5c2cf.vercel.app';
 const AUTH_CALLBACK_URL = `${BASE_URL}/auth/callback`;
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
