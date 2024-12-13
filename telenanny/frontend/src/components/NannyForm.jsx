@@ -352,12 +352,12 @@ function NannyForm({ onSubmitSuccess }) {
 
                 <div className="form-group">
                     <label>Languages</label>
-                    <div className="chip-group">
+                    <div className="selection-grid">
                         {LANGUAGES.map(lang => (
                             <button
                                 key={lang}
                                 type="button"
-                                className={`chip ${formData.languages.includes(lang) ? 'selected' : ''}`}
+                                className={`selection-item ${formData.languages.includes(lang) ? 'selected' : ''}`}
                                 onClick={() => toggleLanguage(lang)}
                             >
                                 {lang}
@@ -368,12 +368,12 @@ function NannyForm({ onSubmitSuccess }) {
 
                 <div className="form-group">
                     <label>Special Skills</label>
-                    <div className="chip-group">
+                    <div className="selection-grid">
                         {SKILLS.map(skill => (
                             <button
                                 key={skill}
                                 type="button"
-                                className={`chip ${formData.specialSkills.includes(skill) ? 'selected' : ''}`}
+                                className={`selection-item ${formData.specialSkills.includes(skill) ? 'selected' : ''}`}
                                 onClick={() => toggleSkill(skill)}
                             >
                                 {skill}
