@@ -17,8 +17,6 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
-        flowType: 'pkce',
-        redirectTo: AUTH_CALLBACK_URL  // Use the callback URL instead
     }
 });
 
