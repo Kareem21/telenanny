@@ -36,7 +36,7 @@ function AuthForm() {
         } catch (error) {
             console.error('Login error:', error);
             setMessage({
-                text: 'Failed to send login link. Please try again.',
+                text: 'Failed to send login link. Please try again. (deploymentD check)',
                 type: 'error',
             });
         } finally {
