@@ -16,12 +16,12 @@ function AuthForm() {
         try {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
-                options: {
-                    emailRedirectTo: urls.callback, // Use the callback URL from context
-                    data: {
-                        intendedDestination: '/register-nanny'
-                    }
-                },
+                // options: {
+                //     emailRedirectTo: urls.callback, // Use the callback URL from context
+                //     data: {
+                //         intendedDestination: '/register-nanny'
+                //     }
+                // },
             });
 
             if (error) {
