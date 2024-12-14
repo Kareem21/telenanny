@@ -1,8 +1,9 @@
-// src/components/JobPosting.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// No need to import useAuth if not required. Remove if you don't need session/user info.
+ import { useAuth } from './AuthContext';
 
-function JobPosting() {
+function JobPosting({ addJob }) {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         rate: '',
@@ -12,49 +13,58 @@ function JobPosting() {
         contactEmail: '',
         contactPhone: '',
         employerName: '',
+        captchaAnswer: '', // for the captcha
     });
 
     const handleChange = (e) => {
         const { id, value } = e.target;
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
             ...prevData,
-            [id]: value
+            [id]: value,
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Simple captcha check
+        if (formData.captchaAnswer.trim() !== '9') {
+            alert('Captcha incorrect. Please try again.');
+            return;
+        }
+
         try {
             // Calculate expiration date (1 month from now)
             const expiryDate = new Date();
             expiryDate.setMonth(expiryDate.getMonth() + 1);
 
-            // Insert into Supabase
+            // Insert the new job posting into Supabase
             const { data, error } = await supabase
                 .from('postings')
                 .insert([
                     {
-                        rate: parseInt(formData.rate),
+                        rate: parseInt(formData.rate, 10),
                         location: formData.location,
-                        kids_count: parseInt(formData.kidsCount),
+                        kids_count: parseInt(formData.kidsCount, 10),
                         notes: formData.notes,
                         employer_name: formData.employerName,
                         contact_email: formData.contactEmail,
                         contact_phone: formData.contactPhone,
                         expiry_date: expiryDate.toISOString(),
-                        status: 'active'
-                    }
+                        status: 'active',
+                    },
                 ])
                 .select()
                 .single();
 
             if (error) throw error;
 
-            // Store posting ID in local storage for reference
-            localStorage.setItem('lastPosting', data.id);
+            // Add the newly created job to the homepage feed, if addJob is provided
+            if (addJob) {
+                addJob(data);
+            }
 
-            // Redirect to success page
+            // Redirect to a success page (ensure that route exists)
             navigate(`/posting-success/${data.id}`);
         } catch (error) {
             console.error('Error creating posting:', error);
@@ -146,7 +156,20 @@ function JobPosting() {
                         id="notes"
                         value={formData.notes}
                         onChange={handleChange}
-                    Ï    placeholder="e.g. Looking for someone with CPR training, good with toddlers..."
+                        placeholder="e.g. Looking for someone with CPR training, good with toddlers..."
+                    />
+                </div>
+
+                {/* Simple Captcha */}
+                <div className="form-group">
+                    <label htmlFor="captchaAnswer">What is 4 + 5?</label>
+                    <input
+                        type="text"
+                        id="captchaAnswer"
+                        value={formData.captchaAnswer}
+                        onChange={handleChange}
+                        placeholder="Enter the sum here"
+                        required
                     />
                 </div>
 

@@ -1,17 +1,21 @@
-// src/App.jsx
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import NannyList from './components/NannyList'
-import NannyForm from './components/NannyForm'
-import NannyDashboard from './components/NannyDashboard'
-import NannySeekerForm from './components/NannySeekerForm'
-import HomePage from './components/HomePage'
-import LoginForm from './components/LoginForm'
-import { useAuth } from './components/AuthContext'
-import './App.css'
-import JobPosting from './components/Jobposting' //
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import NannyList from './components/NannyList';
+import NannyForm from './components/NannyForm';
+import NannyDashboard from './components/NannyDashboard';
+import NannySeekerForm from './components/NannySeekerForm';
+import HomePage from './components/HomePage';
+import LoginForm from './components/LoginForm';
+import { useAuth } from './components/AuthContext';
+import './App.css';
+import JobPosting from './components/Jobposting';
+
+// API URL based on environment
+const API_URL = import.meta.env.MODE === 'development'
+    ? 'http://localhost:5002'
+    : 'https://server-1prf.onrender.com';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -23,34 +27,38 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
-    const [userType, setUserType] = useState(null)
-    const [nannies, setNannies] = useState([])
-    const [filteredNannies, setFilteredNannies] = useState([])
-    const { session, loading } = useAuth()
+    const [userType, setUserType] = useState(null);
+    const [nannies, setNannies] = useState([]);
+    const [filteredNannies, setFilteredNannies] = useState([]);
+    const { session, loading } = useAuth();
+    const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        fetchNannies()
-    }, [])
+        fetchNannies();
+    }, []);
 
     const fetchNannies = async () => {
         try {
-            const response = await fetch('https://server-1prf.onrender.com/api/nannies')
-            const data = await response.json()
-            setNannies(data)
-            setFilteredNannies(data)
+            const response = await fetch(`${API_URL}/api/nannies`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setNannies(data);
+            setFilteredNannies(data);
         } catch (error) {
-            console.error('Error fetching nannies:', error)
+            console.error('Error fetching nannies:', error);
         }
-    }
+    };
 
     const handleSearch = (searchParams) => {
-        let filtered = [...nannies]
+        let filtered = [...nannies];
 
         if (searchParams.query) {
             filtered = filtered.filter(nanny =>
                 nanny.name.toLowerCase().includes(searchParams.query.toLowerCase()) ||
                 nanny.location.toLowerCase().includes(searchParams.query.toLowerCase())
-            )
+            );
         }
 
         if (searchParams.languages?.length) {
@@ -58,24 +66,30 @@ function App() {
                 searchParams.languages.some(lang =>
                     nanny.languages.includes(lang)
                 )
-            )
+            );
         }
+
         if (searchParams.minRate) {
             filtered = filtered.filter(nanny =>
                 nanny.rate >= parseInt(searchParams.minRate)
-            )
+            );
         }
+
         if (searchParams.maxRate) {
             filtered = filtered.filter(nanny =>
                 nanny.rate <= parseInt(searchParams.maxRate)
-            )
+            );
         }
 
-        setFilteredNannies(filtered)
-    }
+        setFilteredNannies(filtered);
+    };
+
+    const addJob = (newJob) => {
+        setJobs((prevJobs) => [...prevJobs, newJob]);
+    };
 
     if (loading) {
-        return <div className="loading">Loading...</div>
+        return <div className="loading">Loading...</div>;
     }
 
     return (
@@ -87,11 +101,16 @@ function App() {
                 />
                 <main className="main-content">
                     <Routes>
-                        <Route path="/" element={<HomePage onUserTypeSelect={setUserType} />} />
+                        <Route
+                            path="/"
+                            element={<HomePage onUserTypeSelect={setUserType} jobs={jobs} />}
+                        />
                         <Route
                             path="/register-nanny"
                             element={
-                                session ? <NannyForm onSubmitSuccess={fetchNannies} user={session.user} /> : <LoginForm />
+                                session ?
+                                    <NannyForm onSubmitSuccess={fetchNannies} user={session.user} />
+                                    : <LoginForm />
                             }
                         />
                         <Route
@@ -115,13 +134,10 @@ function App() {
                             path="/login"
                             element={<LoginForm />}
                         />
-
-                        {/* New route for job posting */}
                         <Route
                             path="/post-job"
-                            element={<JobPosting />}
+                            element={<JobPosting addJob={addJob} />}
                         />
-
                         <Route
                             path="*"
                             element={
@@ -136,7 +152,7 @@ function App() {
                 <Footer />
             </div>
         </Router>
-    )
+    );
 }
 
-export default App
+export default App;

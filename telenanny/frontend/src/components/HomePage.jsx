@@ -1,9 +1,8 @@
-// HomePage.jsx
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-function HomePage({ onUserTypeSelect }) {
+function HomePage({ onUserTypeSelect, jobs }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const navigate = useNavigate();
 
@@ -85,6 +84,7 @@ function HomePage({ onUserTypeSelect }) {
             prev === 0 ? testimonials.length - 1 : prev - 1
         );
     };
+
     const handleStartNow = (e) => {
         e.preventDefault();
         window.scrollTo(0, 0);  // Reset scroll position before navigation
@@ -93,7 +93,6 @@ function HomePage({ onUserTypeSelect }) {
 
     return (
         <div className="homepage">
-            {/* Hero Section */}
             {/* Hero Section */}
             <div className="hero-section">
                 <h1 className="hero-title">Welcome to Dubai Nannies!</h1>
@@ -115,27 +114,29 @@ function HomePage({ onUserTypeSelect }) {
             </div>
 
             <div className="dual-section-container">
-                <section className="get-started-section">
-                    <h2>Get Started for FREE</h2>
-                    <p>It’s easy to share what you need in a job post. Families who post are <strong>5x</strong> more likely to find the nanny they need!</p>
-                    <div className="steps-container">
-                        <div className="step-card">
-                            <span className="step-number">1</span>
-                            <h3>You post it</h3>
-                        </div>
-                        <div className="step-arrow">&#8594;</div>
-                        <div className="step-card">
-                            <span className="step-number">2</span>
-                            <h3>Nannies apply</h3>
-                        </div>
-                        <div className="step-arrow">&#8594;</div>
-                        <div className="step-card">
-                            <span className="step-number">3</span>
-                            <h3>Start connecting</h3>
-                        </div>
-                    </div>
-                    <button className="btn-primary" onClick={handleStartNow}>START NOW</button>
-              </section>
+
+
+                {/*<section className="get-started-section">*/}
+                {/*    <h2>Get Started for FREE</h2>*/}
+                {/*    <p>It’s easy to share what you need in a job post. Families who post are <strong>5x</strong> more likely to find the nanny they need!</p>*/}
+                {/*    <div className="steps-container">*/}
+                {/*        <div className="step-card">*/}
+                {/*            <span className="step-number">1</span>*/}
+                {/*            <h3>You post it</h3>*/}
+                {/*        </div>*/}
+                {/*        <div className="step-arrow">&#8594;</div>*/}
+                {/*        <div className="step-card">*/}
+                {/*            <span className="step-number">2</span>*/}
+                {/*            <h3>Nannies apply</h3>*/}
+                {/*        </div>*/}
+                {/*        <div className="step-arrow">&#8594;</div>*/}
+                {/*        <div className="step-card">*/}
+                {/*            <span className="step-number">3</span>*/}
+                {/*            <h3>Start connecting</h3>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    <button className="btn-primary" onClick={handleStartNow}>START NOW</button>*/}
+                {/*</section>*/}
 
                 <section className="featured-profiles">
                     <h2>Featured Nannies</h2>
@@ -150,15 +151,15 @@ function HomePage({ onUserTypeSelect }) {
                                     <div className="languages">
                                         {profile.languages.map(lang => (
                                             <span key={lang} className="language-tag">
-                                               {lang}
-                                           </span>
+                                                {lang}
+                                            </span>
                                         ))}
                                     </div>
                                     <div className="specialties">
                                         {profile.specialties.map(specialty => (
                                             <span key={specialty} className="specialty-tag">
-                                               {specialty}
-                                           </span>
+                                                {specialty}
+                                            </span>
                                         ))}
                                     </div>
                                     <div className="location">
@@ -176,8 +177,7 @@ function HomePage({ onUserTypeSelect }) {
 
             {/* Testimonials Section */}
             <section className="testimonials">
-                <h2>Why Parents Use Dubai nannies Instead</h2>
-                <h2>Why families Use Dubai Nannies Instead</h2>
+                <h2>Why UAE families use Dubai Nannies: </h2>
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
                         <ChevronLeft />
@@ -194,6 +194,28 @@ function HomePage({ onUserTypeSelect }) {
                         <ChevronRight />
                     </button>
                 </div>
+            </section>
+
+            {/* Job Listings Feed Section */}
+            <section className="job-feed-section">
+                <h2>Latest Job Postings</h2>
+                {jobs.length === 0 ? (
+                    <p>No job postings yet. Be the first to post a job!</p>
+                ) : (
+                    <ul className="job-feed-list">
+                        {jobs.map((job, index) => (
+                            <li key={index} className="job-card">
+                                <h3>{job.employer_name}</h3>
+                                <p><strong>Rate:</strong> {job.rate} AED/month</p>
+                                <p><strong>Location:</strong> {job.location}</p>
+                                <p><strong>Number of Kids:</strong> {job.kids_count}</p>
+                                {job.notes && <p><strong>Notes:</strong> {job.notes}</p>}
+                                <p><strong>Contact Email:</strong> {job.contact_email}</p>
+                                <p><strong>Contact Phone:</strong> {job.contact_phone}</p>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </section>
         </div>
     );

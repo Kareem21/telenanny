@@ -277,7 +277,7 @@ app.get('/api/nannies/profile', async (req, res) => {
     const { data: nannyData, error: profileError } = await supabaseServer
         .from('nannies')
         .select('*')
-        .eq('id', 'e6228391-1d43-48ca-aab8-e351d8c75284')
+        .eq('user_id', userId)
         .limit(1);
 
     if (profileError) {

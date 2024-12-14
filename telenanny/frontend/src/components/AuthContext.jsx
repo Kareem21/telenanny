@@ -8,8 +8,11 @@ if (!supabaseUrl || !supabaseKey) {
     throw new Error('Missing Supabase environment variables');
 }
 
-// Define base URL and callback URL
-const BASE_URL = 'https://nanniestest2-lbgwqeokw-kareems-projects-d3c5c2cf.vercel.app';
+// Define base URL based on environment
+const BASE_URL = import.meta.env.MODE === 'development'
+    ? 'http://localhost:5173'
+    : 'https://nanniestest2.vercel.app';
+
 const AUTH_CALLBACK_URL = `${BASE_URL}/auth/callback`;
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -17,6 +20,8 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
+        flowType: 'pkce',
+        redirectTo: AUTH_CALLBACK_URL
     }
 });
 
@@ -26,7 +31,6 @@ const AuthContext = createContext({
     loading: true,
     supabase: null,
     signOut: async () => {},
-    // Add the base URL and callback URL to the context
     urls: {
         base: BASE_URL,
         callback: AUTH_CALLBACK_URL
@@ -58,6 +62,7 @@ export const AuthProvider = ({ children }) => {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
+                console.log('Auth event:', event);
                 setSession(session);
                 setUser(session?.user ?? null);
                 setLoading(false);
@@ -72,7 +77,9 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (session) {
             console.log('Session:', session);
-            console.log('AUTHCONTEXT User ID (auth.uid()):', session.user.id);
+            console.log('AUTHCONTEXT User ID:', session.user.id);
+            console.log('Current BASE_URL:', BASE_URL);
+            console.log('Current AUTH_CALLBACK_URL:', AUTH_CALLBACK_URL);
         } else {
             console.log('AUTHCONTEXT No active session.');
         }
@@ -97,7 +104,6 @@ export const AuthProvider = ({ children }) => {
         supabase,
         signOut,
         isAuthenticated: !!session,
-        // Include the URLs in the context value
         urls: {
             base: BASE_URL,
             callback: AUTH_CALLBACK_URL
