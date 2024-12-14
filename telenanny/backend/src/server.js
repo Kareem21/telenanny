@@ -11,7 +11,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-
+    'https://nanniestest2.vercel.app',
+    'http://localhost:5173',
     'https://nanniestest2-lbgwqeokw-kareems-projects-d3c5c2cf.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',
