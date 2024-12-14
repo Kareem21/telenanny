@@ -240,6 +240,24 @@ app.post('/api/nannies', upload.fields([
   }
 });
 
+app.get('/auth/callback', async (req, res) => {
+  const { code } = req.query;
+
+  if (!code) {
+    return res.status(400).json({ error: 'No code provided' });
+  }
+
+  try {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) throw error;
+
+    // Redirect to the appropriate page after successful authentication
+    res.redirect('/register-nanny');
+  } catch (error) {
+    console.error('Auth callback error:', error);
+    res.status(500).json({ error: 'Authentication failed' });
+  }
+});
 app.get('/api/nannies/profile', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   const userId = req.query.user_id;
