@@ -13,9 +13,7 @@ import './App.css';
 import JobPosting from './components/Jobposting';
 
 // API URL based on environment
-const API_URL = import.meta.env.MODE === 'development'
-    ? 'http://localhost:5002'
-    : 'https://server-1prf.onrender.com';
+const API_URL =  'https://server-1prf.onrender.com';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {

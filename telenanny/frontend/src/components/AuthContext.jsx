@@ -15,8 +15,7 @@ const BASE_URL = import.meta.env.MODE === 'development'
 
 const AUTH_CALLBACK_URL = `${BASE_URL}/auth/callback`;
 
-const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY, {    auth: {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
