@@ -7,23 +7,29 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-
+// Updated CORS configuration
 app.use(cors({
   origin: [
     'https://nanniestest2.vercel.app',
     'http://localhost:5173',
-    'https://nanniestest2-lbgwqeokw-kareems-projects-d3c5c2cf.vercel.app',
     'http://localhost:3000',
-    'http://localhost:5173',
     'https://dubainannies.vercel.app',
-    'https://server-1prf.onrender.com',  // Your backend URL
-    'https://ejbiorpholetwkprfrfj.supabase.co'  // Your Supabase project URL
+    'https://server-1prf.onrender.com',
+    'https://ejbiorpholetwkprfrfj.supabase.co'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Authorization', 'Content-Type']
+  allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
+
+// Add CORS headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  next();
+});
 
 // MIME type mappings
 const mimeTypeToEnum = {
