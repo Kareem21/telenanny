@@ -13,14 +13,24 @@ const BASE_URL = import.meta.env.MODE === 'development'
     ? 'http://localhost:5173'
     : 'https://nanniestest2.vercel.app';
 
-const AUTH_CALLBACK_URL = `${BASE_URL}/auth/callback`;
+const AUTH_CALLBACK_URL = import.meta.env.MODE === 'development'
+    ? 'http://localhost:5173/auth/callback'
+    : 'https://nanniestest2.vercel.app/auth/callback';
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY, {    auth: {
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
         flowType: 'pkce',
-        redirectTo: AUTH_CALLBACK_URL
+        redirectTo: AUTH_CALLBACK_URL,
+        // Add these options
+        debug: true, // This will help us see what's happening
+        cookieOptions: {
+            domain: import.meta.env.MODE === 'development' ? 'localhost' : 'nanniestest2.vercel.app',
+            sameSite: 'lax'
+        }
     }
 });
 
