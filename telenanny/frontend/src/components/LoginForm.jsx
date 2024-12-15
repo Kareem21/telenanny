@@ -24,8 +24,17 @@ function AuthForm() {
                     emailRedirectTo: urls.callback,
                     data: {
                         intendedDestination: '/register-nanny'
+                    },
+                    headers: {
+                        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
                     }
                 }
+            });
+
+            console.log('Request newwwww headers:', {
+                apikey: import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0,10) + '...',
+                Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0,10)}...`
             });
 
             console.log('signInWithOtp result error:', error);
@@ -43,7 +52,7 @@ function AuthForm() {
         } catch (error) {
             console.error('Login error caught:', error);
             setMessage({
-                text: 'Failed to send login link. Please try again. (deploymentD check)',
+                text: 'Failed to send login link. Please try again. (deploymentR check)',
                 type: 'error',
             });
         } finally {

@@ -35,10 +35,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         flowType: 'pkce',
         redirectTo: AUTH_CALLBACK_URL,
         debug: true,
-        cookieOptions: {
-            domain: import.meta.env.MODE === 'development' ? 'localhost' : 'nanniestest2.vercel.app',
-            sameSite: 'lax'
-        }
+        storageKey: 'supabase.auth.token',
     }
 });
 console.log('Supabase client created in AuthContext:', supabase);
