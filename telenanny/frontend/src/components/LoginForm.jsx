@@ -22,11 +22,8 @@ function AuthForm() {
                         intendedDestination: '/register-nanny'
                     }
                 }
-            }, {
-                headers: {
-                    'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
-                }
-            });
+            }, );
+
 
             if (error) {
                 throw error;
