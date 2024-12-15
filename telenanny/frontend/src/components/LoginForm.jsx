@@ -17,11 +17,15 @@ function AuthForm() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: 'http://localhost:5173/auth/callback',
+                    emailRedirectTo: urls.callback,
                     data: {
                         intendedDestination: '/register-nanny'
                     }
-                },
+                }
+            }, {
+                headers: {
+                    'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
+                }
             });
 
             if (error) {
