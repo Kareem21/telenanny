@@ -15,7 +15,13 @@ function AuthForm() {
         console.log('=== handleLogin START ===');
         setLoading(true);
         setMessage({ text: '', type: '' });
-        console.log('Attempting signInWithOtp with email:', email, 'redirectTo:', urls.callback);
+
+        // Log the headers we're going to send
+        const headers = {
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        };
+        console.log('Sending headers:', headers);
 
         try {
             const { error } = await supabase.auth.signInWithOtp({
@@ -25,39 +31,32 @@ function AuthForm() {
                     data: {
                         intendedDestination: '/register-nanny'
                     },
-                    headers: {
-                        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-                        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-                    }
+                    headers: headers
                 }
             });
 
-            console.log('Request newwwww headers:', {
-                apikey: import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0,10) + '...',
-                Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0,10)}...`
-            });
-
-            console.log('signInWithOtp result error:', error);
             if (error) {
-                console.error('Error returned from signInWithOtp:', error);
+                console.error('Detailed error:', {
+                    message: error.message,
+                    status: error.status,
+                    name: error.name
+                });
                 throw error;
             }
 
-            console.log('No error from signInWithOtp, setting success message...');
             setMessage({
                 text: 'Magic link sent! Check your email to log in.',
                 type: 'success',
             });
             setEmail('');
         } catch (error) {
-            console.error('Login error caught:', error);
+            console.error('Full error object:', error);
             setMessage({
-                text: 'Failed to send login link. Please try again. (deploymentR check)',
+                text: 'Failed to send login link. Please verify your email and try again.',
                 type: 'error',
             });
         } finally {
             setLoading(false);
-            console.log('=== handleLogin END ===');
         }
     };
 
