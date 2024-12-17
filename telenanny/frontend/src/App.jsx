@@ -85,7 +85,7 @@ function App() {
                                 <>
                                     <HomePage onUserTypeSelect={setUserType} jobs={jobs}/>
                                     <h2 className="text-2xl font-bold text-center my-8">Active Nannies</h2>
-g
+
                                     <NannyList nannies={filteredNannies}/>
                                 </>
                             }

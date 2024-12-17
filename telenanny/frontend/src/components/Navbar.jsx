@@ -76,12 +76,14 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
         <nav className="navbar">
             <div className="nav-content">
                 <div className="nav-left">
-                    <Link to="/" className="logo-link">
+                    <Link to="/" className="logo-link flex items-center gap-2">
                         <h1>Dubai Nannies</h1>
+                        <span
+                            className="bg-[#2563eb] text-white text-xs px-2 py-0.5 rounded-full font-medium">Beta</span>
                     </Link>
                     {user && nannyName && (
                         <div className="user-profile ml-4 flex items-center">
-                            <User size={20} className="text-gray-600" />
+                            <User size={20} className="text-gray-600"/>
                             <span className="ml-2 text-gray-700">{nannyName}</span>
                         </div>
                     )}
@@ -91,7 +93,7 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
                     onClick={toggleLanguage}
                     className="language-toggle"
                 >
-                    <Globe size={20} />
+                    <Globe size={20}/>
                     {language}
                 </button>
 

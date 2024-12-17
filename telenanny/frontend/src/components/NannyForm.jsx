@@ -494,11 +494,13 @@ function NannyForm({ onSubmitSuccess }) {
             {/* CAPTCHA */}
             <div className="form-section">
                 <div className="form-group">
-                    <div
-                        className="g-recaptcha"
-                        data-sitekey="6LdnsJ4qAAAAAInBa61KrDz1gD8QFtyBeo2yFKUl"  // Put your site key here
-                        data-callback="handleCaptchaSubmit"
-                    ></div>
+                    <div className="captcha-container overflow-x-auto w-full flex justify-center">
+                        <div
+                            className="g-recaptcha scale-90 sm:scale-100"
+                            data-sitekey="6LdnsJ4qAAAAAInBa61KrDz1gD8QFtyBeo2yFKUl"
+                            data-callback="handleCaptchaSubmit"
+                        ></div>
+                    </div>
                 </div>
             </div>
 

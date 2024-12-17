@@ -87,16 +87,19 @@ function HomePage({ onUserTypeSelect, jobs }) {
 
     const handleStartNow = (e) => {
         e.preventDefault();
-        window.scrollTo(0, 0);  // Reset scroll position before navigation
+        window.scrollTo(0, 0);
         navigate('/post-job');
     };
 
     return (
         <div className="homepage">
-            {/* Hero Section */}
             <div className="hero-section">
-                <h1 className="hero-title">Welcome to Dubai Nannies!</h1>
+                <div className="flex items-center justify-center gap-2">
+                    <h1 className="hero-title">Welcome to Dubai Nannies!</h1>
+                </div>
+
                 <p className="hero-subtitle">Please select your account type to continue</p>
+
                 <div className="user-type-buttons">
                     <button
                         onClick={handleNannyClick}
@@ -104,15 +107,17 @@ function HomePage({ onUserTypeSelect, jobs }) {
                     >
                         I'm a Nanny
                     </button>
+
                     <div className="relative inline-block">
                         <button
                             className="user-type-btn btn-secondary relative opacity-50 cursor-not-allowed"
                             disabled={true}
                         >
-    <span className="relative">
-      Looking for a Nanny
-      <span className="absolute top-1/2 left-0 w-full h-0.5 bg-red-500 transform -rotate-12"></span>
-    </span>
+                            <span className="relative">
+                                Looking for a Nanny
+                                <span
+                                    className="absolute top-1/2 left-0 w-full h-0.5 bg-red-500 transform -rotate-12"></span>
+                            </span>
                         </button>
                         <div className="absolute left-full ml-1 text-sm text-blue-600">
                             Coming
@@ -123,11 +128,9 @@ function HomePage({ onUserTypeSelect, jobs }) {
             </div>
 
             <div className="dual-section-container">
-
-
                 {/*<section className="get-started-section">*/}
                 {/*    <h2>Get Started for FREE</h2>*/}
-                {/*    <p>It’s easy to share what you need in a job post. Families who post are <strong>5x</strong> more likely to find the nanny they need!</p>*/}
+                {/*    <p>It's easy to share what you need in a job post. Families who post are <strong>5x</strong> more likely to find the nanny they need!</p>*/}
                 {/*    <div className="steps-container">*/}
                 {/*        <div className="step-card">*/}
                 {/*            <span className="step-number">1</span>*/}
@@ -152,7 +155,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
                     <div className="profiles-grid">
                         {featuredProfiles.map(profile => (
                             <div key={profile.id} className="profile-card">
-                                <img src={profile.photo} alt={profile.name} className="profile-photo" />
+                                <img src={profile.photo} alt={profile.name} className="profile-photo"/>
                                 <div className="profile-info">
                                     <h3>{profile.name}</h3>
                                     <p className="nationality">{profile.nationality}</p>
@@ -184,12 +187,11 @@ function HomePage({ onUserTypeSelect, jobs }) {
                 </section>
             </div>
 
-            {/* Testimonials Section */}
             <section className="testimonials">
                 <h2>Why UAE families use Dubai Nannies: </h2>
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
-                        <ChevronLeft />
+                        <ChevronLeft/>
                     </button>
                     <div className="testimonial-content">
                         <p>"{testimonials[currentTestimonial].text}"</p>
@@ -200,12 +202,11 @@ function HomePage({ onUserTypeSelect, jobs }) {
                         </div>
                     </div>
                     <button onClick={nextTestimonial} className="slider-button">
-                        <ChevronRight />
+                        <ChevronRight/>
                     </button>
                 </div>
             </section>
 
-            {/* Job Listings Feed Section */}
             <section className="job-feed-section">
                 <h2>Latest Job Postings</h2>
                 {jobs.length === 0 ? (

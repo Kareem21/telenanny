@@ -957,3 +957,15 @@ body {
     padding: 0.625rem 1.25rem;
   }
 }
+
+.captcha-container {
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -10px; /* Compensate for parent padding if any */
+}
+
+@media (max-width: 320px) {
+  .g-recaptcha {
+    transform: scale(0.85);
+    transform-origin: center;
+  }
+}
