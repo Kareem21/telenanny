@@ -81,7 +81,12 @@ function App() {
                     <Routes>
                         <Route
                             path="/"
-                            element={<HomePage onUserTypeSelect={setUserType} jobs={jobs} />}
+                            element={
+                                <>
+                                    <HomePage onUserTypeSelect={setUserType} jobs={jobs} />
+                                    <NannyList nannies={filteredNannies} />
+                                </>
+                            }
                         />
                         <Route
                             path="/register-nanny"
