@@ -27,7 +27,7 @@ function AuthForm() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: urls.callback,
+                    emailRedirectTo: `${urls.base}/register-nanny`,  // Change this line
                     data: {
                         intendedDestination: '/register-nanny'
                     },
