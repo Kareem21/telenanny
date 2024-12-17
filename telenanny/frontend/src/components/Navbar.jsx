@@ -118,9 +118,10 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
                             </button>
                             <button
                                 onClick={handleEmployerClick}
-                                className="nav-button"
+                                className="nav-button opacity-50 cursor-not-allowed"
+                                disabled={true}
                             >
-                                I'm looking for a nanny
+                                I'm looking for a nanny <span className="text-sm">(Coming Soon)</span>
                             </button>
                         </div>
                     )}

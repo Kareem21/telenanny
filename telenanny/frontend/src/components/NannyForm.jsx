@@ -130,7 +130,6 @@ function NannyForm({ onSubmitSuccess }) {
                 const renamedFile = new File([file], `${nameForFile}_cv.${fileExtension}`, { type: file.type });
                 setFormData({ ...formData, cv: renamedFile });
                 setCvName(renamedFile.name);
-                navigate('/');
 
             }
             setErrorMessage('');
@@ -211,6 +210,7 @@ function NannyForm({ onSubmitSuccess }) {
 
             onSubmitSuccess();
             alert('Profile created successfully!');
+            navigate('/');
 
             // Reset form
             setFormData({

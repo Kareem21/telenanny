@@ -104,12 +104,21 @@ function HomePage({ onUserTypeSelect, jobs }) {
                     >
                         I'm a Nanny
                     </button>
-                    <button
-                        onClick={handleEmployerClick}
-                        className="user-type-btn btn-secondary"
-                    >
-                        Looking for a Nanny
-                    </button>
+                    <div className="relative inline-block">
+                        <button
+                            className="user-type-btn btn-secondary relative opacity-50 cursor-not-allowed"
+                            disabled={true}
+                        >
+    <span className="relative">
+      Looking for a Nanny
+      <span className="absolute top-1/2 left-0 w-full h-0.5 bg-red-500 transform -rotate-12"></span>
+    </span>
+                        </button>
+                        <div className="absolute left-full ml-1 text-sm text-blue-600">
+                            Coming
+                            <div className="-mt-1">Soon</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
