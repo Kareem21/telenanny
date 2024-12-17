@@ -11,9 +11,6 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
 
     useEffect(() => {
         const fetchNannyName = async () => {
-            console.log('fetchNannyName called');
-            console.log('Current user from context:', user);
-            console.log('User ID from context:', user?.id);
 
             if (user?.id) {
                 try {

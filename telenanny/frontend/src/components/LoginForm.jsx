@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { useAuth } from './AuthContext.jsx';
 
 function AuthForm() {
-    console.log('=== AuthForm Component Rendered ===');
+
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const { supabase, urls } = useAuth();
 
-    console.log('AuthForm initial states:', { email, loading, message, urls });
 
     const handleLogin = async (e) => {
         e.preventDefault();

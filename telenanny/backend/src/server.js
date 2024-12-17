@@ -5,24 +5,10 @@ const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 require('dotenv').config();
 
-// BEGIN MASSIVE LOGGING
-console.log('=== SERVER STARTUP ===');
-console.log('ENVIRONMENT VARIABLES:');
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
-console.log('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY);
-console.log('PORT:', process.env.PORT);
-console.log('SMTP_HOST:', process.env.SMTP_HOST);
-console.log('SMTP_PORT:', process.env.SMTP_PORT);
-console.log('SMTP_USER:', process.env.SMTP_USER);
-console.log('SMTP_PASS:', process.env.SMTP_PASS);
-console.log('=======================');
-// END MASSIVE LOGGING
 
 const app = express();
 
 // Updated CORS configuration
-console.log('=== CORS CONFIG ===');
-console.log('Allowed origins: https://nanniestest2.vercel.app, http://localhost:5173, http://localhost:3000, https://dubainannies.vercel.app, https://server-1prf.onrender.com, https://ejbiorpholetwkprfrfj.supabase.co');
 app.use(cors({
   origin: [
     'https://nanniestest2.vercel.app',

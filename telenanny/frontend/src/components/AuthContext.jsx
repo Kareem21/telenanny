@@ -1,13 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-console.log('=== AuthContext INITIALIZING ===');
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log('ENV - VITE_SUPABASE_URL:', supabaseUrl);
-console.log('ENV - VITE_SUPABASE_ANON_KEY:', supabaseKey);
-console.log('MODE:', import.meta.env.MODE);
+
 
 if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase environment variables');
@@ -23,10 +20,8 @@ const AUTH_CALLBACK_URL = import.meta.env.MODE === 'development'
     ? 'http://localhost:5173/auth/callback'
     : 'https://nanniestest2.vercel.app/auth/callback';
 
-console.log('BASE_URL set to:', BASE_URL);
-console.log('AUTH_CALLBACK_URL set to:', AUTH_CALLBACK_URL);
 
-console.log('=== Creating Supabase Client in AuthContext ===');
+
 const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
         autoRefreshToken: true,
@@ -38,7 +33,6 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         storageKey: 'supabase.auth.token',
     }
 });
-console.log('Supabase client created in AuthContext:', supabase);
 
 const AuthContext = createContext({
     session: null,
@@ -53,7 +47,6 @@ const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-    console.log('=== AuthProvider RENDERED ===');
     const [session, setSession] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
