@@ -98,6 +98,27 @@ const upload = multer({
   }
 });
 
+// Add this with your other helper functions
+const axios = require('axios'); // Make sure to add this at the top of your file
+
+async function verifyCaptcha(token) {
+  console.log('=== VERIFY CAPTCHA ===');
+  console.log('Verifying token:', token);
+  try {
+    const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
+      params: {
+        secret: process.env.RECAPTCHA_SECRET_KEY,
+        response: token
+      }
+    });
+    console.log('CAPTCHA verification response:', response.data);
+    return response.data.success;
+  } catch (error) {
+    console.error('CAPTCHA verification error:', error);
+    return false;
+  }
+}
+
 // Helper function for file upload
 async function uploadFileToSupabase(file, bucket, folder) {
   console.log('=== UPLOAD FILE TO SUPABASE ===');
@@ -196,31 +217,34 @@ app.post('/api/nannies', upload.fields([
   console.log('Request files:', req.files);
 
   try {
-    const authHeader = req.headers.authorization || '';
-    console.log('Auth Header:', authHeader);
-    const token = authHeader.replace('Bearer ', '');
-    console.log('Extracted token:', token);
-
-    if (!token) {
-      console.error('No token provided');
-      return res.status(401).json({ error: 'Missing or invalid token' });
+    // Verify CAPTCHA
+    const captchaToken = req.body.captchaToken;
+    if (!captchaToken) {
+      console.error('No CAPTCHA token provided');
+      return res.status(400).json({ error: 'CAPTCHA verification required' });
     }
 
-    const supabaseForUser = createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_ANON_KEY,
-        {
-          global: {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        }
-    );
-    console.log('SupabaseForUser client created:', supabaseForUser);
+    const isCaptchaValid = await verifyCaptcha(captchaToken);
+    if (!isCaptchaValid) {
+      console.error('CAPTCHA verification failed');
+      return res.status(400).json({ error: 'CAPTCHA verification failed' });
+    }
+
+    // Check for existing phone number
+    const { data: existingNanny } = await supabase
+        .from('nannies')
+        .select('phone')
+        .eq('phone', req.body.phone)
+        .single();
+
+    if (existingNanny) {
+      console.log('Phone number already exists:', req.body.phone);
+      return res.status(409).json({
+        error: 'A profile with this phone number already exists'
+      });
+    }
 
     const nannyData = {
-      user_id: req.body.user_id,
       name: req.body.name,
       location: req.body.location,
       nationality: req.body.nationality,
@@ -279,9 +303,10 @@ app.post('/api/nannies', upload.fields([
     }
 
     console.log('Inserting nanny data into DB...');
-    const { data, error } = await supabaseForUser
+    const { data, error } = await supabase
         .from('nannies')
-        .insert([nannyData]);
+        .insert([nannyData])
+        .select();
 
     if (error) {
       console.error('Database insert error:', error);
@@ -290,6 +315,7 @@ app.post('/api/nannies', upload.fields([
 
     console.log('Insert successful, response data:', data);
     res.status(201).json(data);
+
   } catch (error) {
     console.error('Error creating nanny profile:', error);
     res.status(400).json({ error: error.message });
