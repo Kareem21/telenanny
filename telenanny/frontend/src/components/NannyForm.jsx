@@ -1,22 +1,7 @@
-// NannyForm.jsx
 import { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
-
 function NannyForm({ onSubmitSuccess }) {
-    const { user, session } = useAuth();
-
-    useEffect(() => {
-        if (!user) {
-            console.error('User not authenticated');
-        }
-        console.log('User ID from AuthContext:', user?.id);
-        console.log('Session Token:', session?.access_token);
-
-
-    }, [user]);
-
     const [formData, setFormData] = useState({
         name: '',
         location: '',
@@ -38,9 +23,11 @@ function NannyForm({ onSubmitSuccess }) {
         introduction: ''
     });
 
+    const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [profilePicName, setProfilePicName] = useState('');
     const [cvName, setCvName] = useState('');
+    const [captchaToken, setCaptchaToken] = useState(null);
 
     const LANGUAGES = ['English', 'Arabic', 'Russian', 'Filipino', 'Hindi', 'Urdu', 'French'];
     const SKILLS = [
@@ -81,6 +68,31 @@ function NannyForm({ onSubmitSuccess }) {
         'Other'
     ];
 
+// In your useEffect
+    useEffect(() => {
+        // Load reCAPTCHA script
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+
+        // Clean up function
+        return () => {
+            const scripts = document.getElementsByTagName('script');
+            for (let script of scripts) {
+                if (script.src.includes('recaptcha')) {
+                    script.remove();
+                }
+            }
+        };
+    }, []);
+
+// Add this to window object for callback
+    window.handleCaptchaSubmit = (token) => {
+        setCaptchaToken(token);
+    };
+
     const handleFileChange = (e, fileType) => {
         const file = e.target.files[0];
         if (file) {
@@ -89,9 +101,8 @@ function NannyForm({ onSubmitSuccess }) {
                 return;
             }
 
-            // Generate the filename based on the nanny's name
-            const nameForFile = formData.name.replace(/\s+/g, ''); // Remove spaces
-            const fileExtension = file.name.split('.').pop(); // Extract file extension
+            const nameForFile = formData.name.replace(/\s+/g, '');
+            const fileExtension = file.name.split('.').pop();
 
             if (fileType === 'profilePic') {
                 if (!file.type.match('image.*')) {
@@ -103,7 +114,6 @@ function NannyForm({ onSubmitSuccess }) {
                     return;
                 }
 
-                // Rename the file
                 const renamedFile = new File([file], `${nameForFile}_profile.${fileExtension}`, { type: file.type });
                 setFormData({ ...formData, profilePic: renamedFile });
                 setProfilePicName(renamedFile.name);
@@ -117,7 +127,6 @@ function NannyForm({ onSubmitSuccess }) {
                     return;
                 }
 
-                // Rename the file
                 const renamedFile = new File([file], `${nameForFile}_cv.${fileExtension}`, { type: file.type });
                 setFormData({ ...formData, cv: renamedFile });
                 setCvName(renamedFile.name);
@@ -125,7 +134,6 @@ function NannyForm({ onSubmitSuccess }) {
             setErrorMessage('');
         }
     };
-
 
     const toggleSkill = (skill) => {
         setFormData(prev => ({
@@ -148,16 +156,13 @@ function NannyForm({ onSubmitSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!user?.id) {
-            setErrorMessage('You must be logged in to create a profile');
+        if (!captchaToken) {
+            setErrorMessage('Please complete the CAPTCHA verification');
             return;
         }
 
         try {
             const formDataToSend = new FormData();
-
-            // Add user_id from auth
-            formDataToSend.append('user_id', user.id);
 
             // Convert numeric fields
             const numericFields = ['age', 'experience', 'rate'];
@@ -185,19 +190,17 @@ function NannyForm({ onSubmitSuccess }) {
                 formDataToSend.append('cv', formData.cv);
             }
 
+            formDataToSend.append('captchaToken', captchaToken);
+
             const response = await fetch('https://server-1prf.onrender.com/api/nannies', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${session?.access_token}`,
-                },
                 body: formDataToSend,
             });
 
-
-
-            console.log("Session after end : ",session)
-            console.log('User ID:', user.id);
-
+            if (response.status === 409) {
+                setErrorMessage('A profile with this phone number already exists. Please use a different phone number.');
+                return;
+            }
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -230,17 +233,12 @@ function NannyForm({ onSubmitSuccess }) {
             });
             setProfilePicName('');
             setCvName('');
-            console.log('User ID end : ', user.id);
 
         } catch (error) {
             console.error('Error creating profile:', error);
             setErrorMessage(error.message || 'Error creating profile');
         }
     };
-
-    if (!user) {
-        return <div className="error-message">Please log in to create a nanny profile.</div>;
-    }
 
     return (
         <form onSubmit={handleSubmit} className="nanny-form">
@@ -314,6 +312,7 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
+            {/* Contact Information */}
             <div className="form-section">
                 <h3>Contact Information</h3>
                 <div className="form-group">
@@ -337,6 +336,7 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
+            {/* Professional Information */}
             <div className="form-section">
                 <h3>Professional Information</h3>
                 <div className="form-group">
@@ -423,6 +423,7 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
+            {/* Work Preferences */}
             <div className="form-section">
                 <h3>Work Preferences</h3>
                 <div className="form-group">
@@ -457,8 +458,7 @@ function NannyForm({ onSubmitSuccess }) {
                                 type="radio"
                                 value="live-out"
                                 checked={formData.accommodation_preference === 'live-out'}
-                                onChange={(e) => setFormData({...formData, accommodation_preference: e.target.value})}
-                            />
+                                onChange={(e) => setFormData({...formData, accommodation_preference: e.target.value})}/>
                             Live-out
                         </label>
                     </div>
@@ -489,6 +489,16 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
+            {/* CAPTCHA */}
+            <div className="form-section">
+                <div className="form-group">
+                    <div
+                        className="g-recaptcha"
+                        data-sitekey="6LdnsJ4qAAAAAInBa61KrDz1gD8QFtyBeo2yFKUl"  // Put your site key here
+                        data-callback="handleCaptchaSubmit"
+                    ></div>
+                </div>
+            </div>
 
             <div className="form-submit">
                 <button type="submit" className="submit-button">

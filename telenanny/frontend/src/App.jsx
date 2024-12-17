@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NannyList from './components/NannyList';
@@ -7,28 +7,15 @@ import NannyForm from './components/NannyForm';
 import NannyDashboard from './components/NannyDashboard';
 import NannySeekerForm from './components/NannySeekerForm';
 import HomePage from './components/HomePage';
-import LoginForm from './components/LoginForm';
-import { useAuth } from './components/AuthContext';
-import './App.css';
 import JobPosting from './components/Jobposting';
+import './App.css';
 
-// API URL based on environment
-const API_URL =  'https://server-1prf.onrender.com';
-
-// Protected Route Component
-function ProtectedRoute({ children }) {
-    const { session } = useAuth();
-    if (!session) {
-        return <Navigate to="/" />;
-    }
-    return children;
-}
+const API_URL = 'https://server-1prf.onrender.com';
 
 function App() {
     const [userType, setUserType] = useState(null);
     const [nannies, setNannies] = useState([]);
     const [filteredNannies, setFilteredNannies] = useState([]);
-    const { session, loading } = useAuth();
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
@@ -86,17 +73,10 @@ function App() {
         setJobs((prevJobs) => [...prevJobs, newJob]);
     };
 
-    if (loading) {
-        return <div className="loading">Loading...</div>;
-    }
-
     return (
         <Router>
             <div className="app">
-                <Navbar
-                    userType={userType}
-                    onUserTypeChange={setUserType}
-                />
+                <Navbar userType={userType} onUserTypeChange={setUserType} />
                 <main className="main-content">
                     <Routes>
                         <Route
@@ -105,19 +85,11 @@ function App() {
                         />
                         <Route
                             path="/register-nanny"
-                            element={
-                                session ?
-                                    <NannyForm onSubmitSuccess={fetchNannies} user={session.user} />
-                                    : <LoginForm />
-                            }
+                            element={<NannyForm onSubmitSuccess={fetchNannies} />}
                         />
                         <Route
                             path="/account"
-                            element={
-                                <ProtectedRoute>
-                                    <NannyDashboard />
-                                </ProtectedRoute>
-                            }
+                            element={<NannyDashboard />}
                         />
                         <Route
                             path="/find-nanny"
@@ -127,10 +99,6 @@ function App() {
                                     <NannyList nannies={filteredNannies} />
                                 </div>
                             }
-                        />
-                        <Route
-                            path="/login"
-                            element={<LoginForm />}
                         />
                         <Route
                             path="/post-job"
