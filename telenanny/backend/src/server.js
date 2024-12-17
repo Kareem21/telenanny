@@ -206,13 +206,11 @@ app.get('/api/nannies', async (req, res) => {
   }
 });
 
-// Create new nanny profile
 app.post('/api/nannies', upload.fields([
   { name: 'cv', maxCount: 1 },
   { name: 'profilePic', maxCount: 1 }
 ]), async (req, res) => {
   console.log('=== POST /api/nannies ===');
-  console.log('Request headers:', req.headers);
   console.log('Request body:', req.body);
   console.log('Request files:', req.files);
 
