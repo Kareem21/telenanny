@@ -161,7 +161,19 @@ function NannyForm({ onSubmitSuccess }) {
             setErrorMessage('Please complete the CAPTCHA verification');
             return;
         }
+        try {
+            const phoneCheckResponse = await fetch(`https://server-1prf.onrender.com/api/nannies/check-phone/${formData.phone}`);
+            const phoneData = await phoneCheckResponse.json();
 
+            if (phoneData.exists) {
+                setErrorMessage('This phone number is already registered. Please use a different number.');
+                return;
+            }
+        } catch (error) {
+            console.error('Error checking phone number:', error);
+            setErrorMessage('Error validating phone number. Please try again.');
+            return;
+        }
         try {
             const formDataToSend = new FormData();
 
@@ -332,8 +344,13 @@ function NannyForm({ onSubmitSuccess }) {
                     <input
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) => {
+                            // Only allow numbers and limit to 12 digits
+                            const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
+                            setFormData({...formData, phone: value});
+                        }}
                         required
+                        placeholder="Enter phone number"
                     />
                 </div>
             </div>
