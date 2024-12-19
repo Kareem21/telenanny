@@ -174,6 +174,32 @@ function safeJSONParse(str, fallback = null) {
 
 // Routes
 // Get all nannies
+
+app.get('/api/nannies/check-phone/:phone', async (req, res) => {
+  console.log('=== GET /api/nannies/check-phone/:phone ===');
+  console.log('Checking phone:', req.params.phone);
+
+  try {
+    const { data, error } = await supabase
+        .from('nannies')
+        .select('phone')
+        .eq('phone', req.params.phone)
+        .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Database error:', error);
+      throw error;
+    }
+
+    console.log('Phone check result:', { exists: !!data });
+    res.json({ exists: !!data });
+
+  } catch (error) {
+    console.error('Error checking phone number:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get('/api/nannies', async (req, res) => {
   console.log('=== GET /api/nannies ===');
   try {
