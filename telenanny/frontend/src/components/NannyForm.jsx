@@ -247,7 +247,6 @@ function NannyForm({ onSubmitSuccess }) {
                 nationality: '',
                 experience: '',
                 languages: [],
-                rate: '',
                 email: '',
                 phone: '',
                 visa_status: '',
@@ -257,7 +256,6 @@ function NannyForm({ onSubmitSuccess }) {
                 cv: null,
                 accommodation_preference: 'live-out',
                 can_travel: false,
-                education: '',
                 specialSkills: [],
                 introduction: ''
             });
