@@ -16,7 +16,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://dubainannies.vercel.app',
     'https://server-1prf.onrender.com',
-    'https://ejbiorpholetwkprfrfj.supabase.co'
+    'https://ejbiorpholetwkprfrfj.supabase.co',
+      'https://nannydubai.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
