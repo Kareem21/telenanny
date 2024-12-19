@@ -266,8 +266,6 @@ app.post('/api/nannies', upload.fields([
       visa_status: req.body.visa_status,
       age: parseInt(req.body.age, 10),
       special_skills: safeJSONParse(req.body.specialSkills, []),
-      working_hours: safeJSONParse(req.body.workingHours, { start: '', end: '' }),
-      working_days: safeJSONParse(req.body.workingDays, [])
     };
 
     console.log('Parsed nannyData:', nannyData);
@@ -499,8 +497,6 @@ app.put('/api/nannies/:id', upload.fields([
       ...req.body,
       languages: safeJSONParse(req.body.languages, undefined),
       special_skills: safeJSONParse(req.body.specialSkills, undefined),
-      working_hours: safeJSONParse(req.body.workingHours, undefined),
-      working_days: safeJSONParse(req.body.workingDays, undefined),
       can_travel: req.body.can_travel === 'true'
     };
 
