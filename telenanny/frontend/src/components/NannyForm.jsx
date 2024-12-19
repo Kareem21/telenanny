@@ -28,8 +28,10 @@ function NannyForm({ onSubmitSuccess }) {
     const [profilePicName, setProfilePicName] = useState('');
     const [cvName, setCvName] = useState('');
     const [captchaToken, setCaptchaToken] = useState(null);
+    const [customLanguage, setCustomLanguage] = useState('');
+    const [isOtherSelected, setIsOtherSelected] = useState(false);
 
-    const LANGUAGES = ['English', 'Arabic', 'Russian', 'Filipino', 'Hindi', 'Urdu', 'French'];
+    const LANGUAGES = ['English', 'Arabic', 'Russian', 'Filipino', 'Hindi', 'Urdu', 'French', 'Other'];
     const SKILLS = [
         'Newborn Care',
         'Special Needs Care',
@@ -68,16 +70,13 @@ function NannyForm({ onSubmitSuccess }) {
         'Other'
     ];
 
-// In your useEffect
     useEffect(() => {
-        // Load reCAPTCHA script
         const script = document.createElement('script');
         script.src = 'https://www.google.com/recaptcha/api.js';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
 
-        // Clean up function
         return () => {
             const scripts = document.getElementsByTagName('script');
             for (let script of scripts) {
@@ -88,7 +87,6 @@ function NannyForm({ onSubmitSuccess }) {
         };
     }, []);
 
-// Add this to window object for callback
     window.handleCaptchaSubmit = (token) => {
         setCaptchaToken(token);
     };
@@ -146,12 +144,32 @@ function NannyForm({ onSubmitSuccess }) {
     };
 
     const toggleLanguage = (lang) => {
-        setFormData(prev => ({
-            ...prev,
-            languages: prev.languages.includes(lang)
-                ? prev.languages.filter(l => l !== lang)
-                : [...prev.languages, lang]
-        }));
+        if (lang === 'Other') {
+            // Toggle the 'Other' option, but do not add 'Other' to the languages list
+            setIsOtherSelected(prev => !prev);
+        } else {
+            // Normal toggling for predefined languages
+            setFormData(prev => ({
+                ...prev,
+                languages: prev.languages.includes(lang)
+                    ? prev.languages.filter(l => l !== lang)
+                    : [...prev.languages, lang]
+            }));
+        }
+    };
+
+    const handleCustomLanguage = (e) => {
+        if (e.key === 'Enter' && customLanguage.trim()) {
+            e.preventDefault();
+            // Only allow adding custom languages if 'Other' is selected
+            if (isOtherSelected && !formData.languages.includes(customLanguage.trim())) {
+                setFormData(prev => ({
+                    ...prev,
+                    languages: [...prev.languages, customLanguage.trim()]
+                }));
+            }
+            setCustomLanguage('');
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -177,7 +195,6 @@ function NannyForm({ onSubmitSuccess }) {
         try {
             const formDataToSend = new FormData();
 
-            // Convert numeric fields
             const numericFields = ['age', 'experience', 'rate'];
             Object.keys(formData).forEach(key => {
                 if (key === 'profilePic' || key === 'cv') return;
@@ -224,7 +241,6 @@ function NannyForm({ onSubmitSuccess }) {
             alert('Profile created successfully!');
             navigate('/');
 
-            // Reset form
             setFormData({
                 name: '',
                 location: '',
@@ -247,6 +263,7 @@ function NannyForm({ onSubmitSuccess }) {
             });
             setProfilePicName('');
             setCvName('');
+            setIsOtherSelected(false);
 
         } catch (error) {
             console.error('Error creating profile:', error);
@@ -326,7 +343,6 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
-            {/* Contact Information */}
             <div className="form-section">
                 <h3>Contact Information</h3>
                 <div className="form-group">
@@ -345,7 +361,6 @@ function NannyForm({ onSubmitSuccess }) {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => {
-                            // Only allow numbers and limit to 12 digits
                             const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
                             setFormData({...formData, phone: value});
                         }}
@@ -355,7 +370,6 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
-            {/* Professional Information */}
             <div className="form-section">
                 <h3>Professional Information</h3>
                 <div className="form-group">
@@ -376,13 +390,48 @@ function NannyForm({ onSubmitSuccess }) {
                             <button
                                 key={lang}
                                 type="button"
-                                className={`selection-item ${formData.languages.includes(lang) ? 'selected' : ''}`}
+                                className={`selection-item ${((lang !== 'Other' && formData.languages.includes(lang)) || (lang === 'Other' && isOtherSelected)) ? 'selected' : ''}`}
                                 onClick={() => toggleLanguage(lang)}
                             >
                                 {lang}
                             </button>
                         ))}
                     </div>
+                    {isOtherSelected && (
+                        <>
+                            {formData.languages.some(lang => !LANGUAGES.includes(lang)) && (
+                                <div className="custom-languages mt-2">
+                                    <p className="text-sm text-gray-600">Additional languages:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        {formData.languages
+                                            .filter(lang => !LANGUAGES.includes(lang))
+                                            .map(lang => (
+                                                <span
+                                                    key={lang}
+                                                    className="selection-item selected"
+                                                    onClick={() => setFormData(prev => ({
+                                                        ...prev,
+                                                        languages: prev.languages.filter(l => l !== lang)
+                                                    }))}
+                                                >
+                                                    {lang} ×
+                                                </span>
+                                            ))}
+                                    </div>
+                                </div>
+                            )}
+                            <div className="mt-2">
+                                <input
+                                    type="text"
+                                    value={customLanguage}
+                                    onChange={(e) => setCustomLanguage(e.target.value)}
+                                    onKeyPress={handleCustomLanguage}
+                                    placeholder="Type a custom language and press Enter"
+                                    className="custom-language-input"
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -442,7 +491,6 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
-            {/* Work Preferences */}
             <div className="form-section">
                 <h3>Work Preferences</h3>
                 <div className="form-group">
@@ -508,7 +556,6 @@ function NannyForm({ onSubmitSuccess }) {
                 </div>
             </div>
 
-            {/* CAPTCHA */}
             <div className="form-section">
                 <div className="form-group">
                     <div className="captcha-container overflow-x-auto w-full flex justify-center">

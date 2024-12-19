@@ -1024,3 +1024,28 @@ body {
 .whatsapp-button:active {
   transform: scale(0.95) !important;
 }
+
+.custom-language-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.custom-language-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px #4f46e5;
+}
+
+.custom-languages {
+  margin-top: 8px;
+}
+
+.custom-languages .selection-item {
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 14px;
+}
