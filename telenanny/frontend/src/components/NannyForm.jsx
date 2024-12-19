@@ -450,32 +450,6 @@ function NannyForm({ onSubmitSuccess }) {
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label>Monthly Rate (AED)</label>
-                    <input
-                        type="number"
-                        value={formData.rate}
-                        onChange={(e) => setFormData({...formData, rate: e.target.value})}
-                        required
-                        min="0"
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Education Level</label>
-                    <select
-                        value={formData.education}
-                        onChange={(e) => setFormData({...formData, education: e.target.value})}
-                        required
-                    >
-                        <option value="">Select Education Level</option>
-                        <option value="high_school">High School</option>
-                        <option value="vocational">Vocational</option>
-                        <option value="bachelor">Bachelor's Degree</option>
-                        <option value="master">Master's Degree</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
 
                 <div className="form-group">
                     <label>CV Upload</label>
@@ -508,53 +482,9 @@ function NannyForm({ onSubmitSuccess }) {
                     </select>
                 </div>
 
-                <div className="form-group">
-                    <label>Accommodation Preference</label>
-                    <div className="radio-group">
-                        <label>
-                            <input
-                                type="radio"
-                                value="live-in"
-                                checked={formData.accommodation_preference === 'live-in'}
-                                onChange={(e) => setFormData({...formData, accommodation_preference: e.target.value})}
-                            />
-                            Live-in
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                value="live-out"
-                                checked={formData.accommodation_preference === 'live-out'}
-                                onChange={(e) => setFormData({...formData, accommodation_preference: e.target.value})}/>
-                            Live-out
-                        </label>
-                    </div>
-                </div>
 
-                <div className="form-group">
-                    <label className="checkbox-label">
-                        <input
-                            type="checkbox"
-                            checked={formData.can_travel}
-                            onChange={(e) => setFormData({...formData, can_travel: e.target.checked})}
-                        />
-                        Willing to travel with family
-                    </label>
-                </div>
             </div>
 
-            <div className="form-section">
-                <h3>Additional Information</h3>
-                <div className="form-group">
-                    <label>Brief Introduction</label>
-                    <textarea
-                        value={formData.introduction}
-                        onChange={(e) => setFormData({...formData, introduction: e.target.value})}
-                        placeholder="Write a brief introduction about yourself, your experience, and why you would be a great nanny..."
-                        rows="4"
-                    />
-                </div>
-            </div>
 
             <div className="form-section">
                 <div className="form-group">
