@@ -277,9 +277,7 @@ app.post('/api/nannies', upload.fields([
     console.log('Parsed nannyData:', nannyData);
 
     const requiredFields = [
-      'name', 'location', 'nationality', 'experience',
-      'rate', 'email', 'phone', 'visa_status', 'age',
-      'education', 'accommodation_preference'
+      'name', 'location', 'nationality', 'experience', 'email', 'phone', 'visa_status', 'age'
     ];
 
     const missingFields = requiredFields.filter(field => !nannyData[field]);
