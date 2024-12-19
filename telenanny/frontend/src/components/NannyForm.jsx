@@ -31,7 +31,7 @@ function NannyForm({ onSubmitSuccess }) {
     const [customLanguage, setCustomLanguage] = useState('');
     const [isOtherSelected, setIsOtherSelected] = useState(false);
 
-    const LANGUAGES = ['English', 'Arabic', 'Russian', 'Filipino', 'Hindi', 'Urdu', 'French', 'Other'];
+    const LANGUAGES = ['English', 'Arabic', 'Russian', 'Filipino', 'Spanish' , 'Ukranian', 'Urdu', 'Italian', 'Other'];
     const SKILLS = [
         'Newborn Care',
         'Special Needs Care',
