@@ -261,14 +261,10 @@ app.post('/api/nannies', upload.fields([
       nationality: req.body.nationality,
       experience: parseInt(req.body.experience, 10),
       languages: safeJSONParse(req.body.languages, []),
-      rate: parseFloat(req.body.rate),
       email: req.body.email,
       phone: req.body.phone,
       visa_status: req.body.visa_status,
       age: parseInt(req.body.age, 10),
-      accommodation_preference: req.body.accommodation_preference,
-      can_travel: req.body.can_travel === 'true',
-      education: req.body.education,
       special_skills: safeJSONParse(req.body.specialSkills, []),
       working_hours: safeJSONParse(req.body.workingHours, { start: '', end: '' }),
       working_days: safeJSONParse(req.body.workingDays, [])
@@ -640,7 +636,6 @@ app.get('/api/nannies/search', async (req, res) => {
       maxRate,
       experience,
       nationality,
-      accommodation_preference
     } = req.query;
 
     let query = supabase
