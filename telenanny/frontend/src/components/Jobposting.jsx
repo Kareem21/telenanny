@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// No need to import useAuth if not required. Remove if you don't need session/user info.
- import { useAuth } from './AuthContext';
 
 function JobPosting({ addJob }) {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        employerName: '',
+        contactEmail: '',
+        contactPhone: '',
         rate: '',
         location: '',
         kidsCount: '',
         notes: '',
-        contactEmail: '',
-        contactPhone: '',
-        employerName: '',
-        captchaAnswer: '', // for the captcha
+        captchaAnswer: '',
+        // New fields
+        jobType: '',
+        liveInOption: '',
+        nationality: '',
+        drivingLicense: '',
     });
 
     const handleChange = (e) => {
@@ -27,18 +30,15 @@ function JobPosting({ addJob }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Simple captcha check
         if (formData.captchaAnswer.trim() !== '9') {
             alert('Captcha incorrect. Please try again.');
             return;
         }
 
         try {
-            // Calculate expiration date (1 month from now)
             const expiryDate = new Date();
             expiryDate.setMonth(expiryDate.getMonth() + 1);
 
-            // Insert the new job posting into Supabase
             const { data, error } = await supabase
                 .from('postings')
                 .insert([
@@ -50,6 +50,10 @@ function JobPosting({ addJob }) {
                         employer_name: formData.employerName,
                         contact_email: formData.contactEmail,
                         contact_phone: formData.contactPhone,
+                        job_type: formData.jobType,
+                        live_in_option: formData.liveInOption,
+                        nationality: formData.nationality,
+                        driving_license: formData.drivingLicense,
                         expiry_date: expiryDate.toISOString(),
                         status: 'active',
                     },
@@ -59,12 +63,10 @@ function JobPosting({ addJob }) {
 
             if (error) throw error;
 
-            // Add the newly created job to the homepage feed, if addJob is provided
             if (addJob) {
                 addJob(data);
             }
 
-            // Redirect to a success page (ensure that route exists)
             navigate(`/posting-success/${data.id}`);
         } catch (error) {
             console.error('Error creating posting:', error);
@@ -78,6 +80,66 @@ function JobPosting({ addJob }) {
             <p>It's free for the first month. After that, it's 99 AED per post (valid for 1 month).</p>
 
             <form onSubmit={handleSubmit} className="job-posting-form">
+                {/* Worker Name */}
+
+                {/* Job Type */}
+                <div className="form-group">
+                    <label htmlFor="jobType">Position Type:</label>
+                    <select
+                        id="jobType"
+                        value={formData.jobType}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select position type</option>
+                        <option value="maid">Maid</option>
+                        <option value="nanny">Nanny</option>
+                        <option value="maid+nanny">Maid + Nanny</option>
+                    </select>
+                </div>
+
+                {/* Live In Option */}
+                <div className="form-group">
+                    <label htmlFor="liveInOption">Live in/out:</label>
+                    <select
+                        id="liveInOption"
+                        value={formData.liveInOption}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select work arrangement</option>
+                        <option value="live-in">Live In</option>
+                        <option value="live-out">Live Out</option>
+                    </select>
+                </div>
+
+                {/* Nationality */}
+                <div className="form-group">
+                    <label htmlFor="nationality">Nationality Preference:</label>
+                    <input
+                        type="text"
+                        id="nationality"
+                        value={formData.nationality}
+                        onChange={handleChange}
+                        placeholder="e.g. Filipino, Indian, etc."
+                    />
+                </div>
+
+                {/* Driving License */}
+                <div className="form-group">
+                    <label htmlFor="drivingLicense">Driving License Required:</label>
+                    <select
+                        id="drivingLicense"
+                        value={formData.drivingLicense}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
                 <div className="form-group">
                     <label htmlFor="employerName">Your Name:</label>
                     <input
@@ -115,7 +177,7 @@ function JobPosting({ addJob }) {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="rate">Rate you're offering (AED/month):</label>
+                    <label htmlFor="rate">Rate (AED/month):</label>
                     <input
                         type="number"
                         id="rate"
@@ -127,7 +189,7 @@ function JobPosting({ addJob }) {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="location">Your Location:</label>
+                    <label htmlFor="location">Location:</label>
                     <input
                         type="text"
                         id="location"
@@ -151,16 +213,16 @@ function JobPosting({ addJob }) {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="notes">Additional Notes / Requirements (optional):</label>
+                    <label htmlFor="notes">Additional Information:</label>
                     <textarea
                         id="notes"
                         value={formData.notes}
                         onChange={handleChange}
-                        placeholder="e.g. Looking for someone with CPR training, good with toddlers..."
+                        placeholder="Additional requirements, responsibilities, or any other relevant information..."
+                        rows="5"
                     />
                 </div>
 
-                {/* Simple Captcha */}
                 <div className="form-group">
                     <label htmlFor="captchaAnswer">What is 4 + 5?</label>
                     <input
