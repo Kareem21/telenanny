@@ -18,50 +18,69 @@ function App() {
     const [filteredNannies, setFilteredNannies] = useState([]);
     const [jobs, setJobs] = useState([]);
 
-    // 1) Fetch Nannies (already exists)
+    // Fetch nannies + job postings once (on mount)
     useEffect(() => {
         fetchNannies();
-        // ALSO fetch job postings
         fetchJobPostings();
     }, []);
 
+    // 1) Fetch Nannies
     const fetchNannies = async () => {
         try {
+            console.log('[CLIENT] Calling fetchNannies()...');
             const response = await fetch(`${API_URL}/api/nannies`);
+            console.log('[CLIENT] Nannies Response object:', response);
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            console.log('[CLIENT] Fetched nannies data:', data);
+
             setNannies(data);
             setFilteredNannies(data);
         } catch (error) {
-            console.error('Error fetching nannies:', error);
+            console.error('[CLIENT] Error fetching nannies:', error);
         }
     };
 
-    // 2) Fetch Job Postings from your Node server route
+    // 2) Fetch Job Postings
     const fetchJobPostings = async () => {
         try {
+            console.log('[CLIENT] Calling fetchJobPostings()...');
             const response = await fetch(`${API_URL}/api/jobpostings`);
+            console.log('[CLIENT] JobPostings Response object:', response);
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setJobs(data); // store in state
+            console.log('[CLIENT] Fetched job postings data:', data);
+
+            setJobs(data);
         } catch (error) {
-            console.error('Error fetching job postings:', error);
+            console.error('[CLIENT] Error fetching job postings:', error);
         }
     };
 
-    // Nanny filtering logic...
+    // Simple search/filter for nannies
     const handleSearch = (searchParams) => {
         let filtered = [...nannies];
-        // filter logic for nannies...
+
+        // Example filter logic; adapt as needed
+        if (searchParams.query) {
+            filtered = filtered.filter((nanny) =>
+                nanny.name.toLowerCase().includes(searchParams.query.toLowerCase()) ||
+                nanny.location.toLowerCase().includes(searchParams.query.toLowerCase())
+            );
+        }
+
         setFilteredNannies(filtered);
     };
 
-    // Called from JobPosting.jsx after a successful new post
+    // Called from <JobPosting> after a successful new job insertion
     const addJob = (newJob) => {
+        console.log('[CLIENT] addJob called with:', newJob);
         setJobs((prevJobs) => [...prevJobs, newJob]);
     };
 
@@ -75,7 +94,7 @@ function App() {
                             path="/"
                             element={
                                 <>
-                                    {/* Pass 'jobs' to HomePage so it can display them */}
+                                    {/* Pass the jobs array to HomePage so it can display them */}
                                     <HomePage onUserTypeSelect={setUserType} jobs={jobs} />
 
                                     <h2 className="text-2xl font-bold text-center my-8">
