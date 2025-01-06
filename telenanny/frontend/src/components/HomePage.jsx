@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';  // Added useEffect
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 function HomePage({ onUserTypeSelect, jobs }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
-    const [lastScrollY, setLastScrollY] = useState(0);  // Added for scroll tracking
+    const [lastScrollY, setLastScrollY] = useState(0);
     const navigate = useNavigate();
 
     // Add scroll effect
@@ -39,7 +39,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
                     boxShadow: '2px 2px 6px rgba(0,0,0,0.4)',
                     zIndex: 1000,
                     transition: 'all 0.3s ease',
-                    transform: `translateY(${Math.min(Math.max(lastScrollY * 0.1, 0), 100)}px)`,
+                    transform: `translateY(${Math.min(Math.max(lastScrollY * 0.1, 0), 100)}px)`
                 }}
             >
                 <svg
@@ -55,9 +55,8 @@ function HomePage({ onUserTypeSelect, jobs }) {
         );
     };
 
-    // Rest of your existing code remains exactly the same
+    // A few featured nannies for demonstration
     const featuredProfiles = [
-        // Your existing featuredProfiles array
         {
             id: 1,
             name: "Maria S.",
@@ -93,8 +92,8 @@ function HomePage({ onUserTypeSelect, jobs }) {
         }
     ];
 
+    // Some testimonials for demonstration
     const testimonials = [
-        // Your existing testimonials array
         {
             text: "Found an amazing nanny through Dubai Nannies. The platform made it so easy to find the perfect match for our family!",
             author: "Sarah Thompson",
@@ -122,7 +121,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
 
     const handleEmployerClick = () => {
         onUserTypeSelect('EMPLOYER');
-        navigate('/find-nanny');
+        navigate('/post-job');
     };
 
     const nextTestimonial = () => {
@@ -135,12 +134,6 @@ function HomePage({ onUserTypeSelect, jobs }) {
         setCurrentTestimonial((prev) =>
             prev === 0 ? testimonials.length - 1 : prev - 1
         );
-    };
-
-    const handleStartNow = (e) => {
-        e.preventDefault();
-        window.scrollTo(0, 0);
-        navigate('/post-job');
     };
 
     return (
@@ -160,21 +153,12 @@ function HomePage({ onUserTypeSelect, jobs }) {
                         I'm a Nanny
                     </button>
 
-                    <div className="relative inline-block">
-                        <button
-                            className="user-type-btn btn-secondary relative opacity-50 cursor-not-allowed"
-                            disabled={true}
-                        >
-                            <span className="relative">
-                                Looking for a Nanny
-                                <span className="absolute top-1/2 left-0 w-full h-0.5 bg-red-500 transform -rotate-12"></span>
-                            </span>
-                        </button>
-                        <div className="absolute left-full ml-1 text-sm text-blue-600">
-                            Coming
-                            <div className="-mt-1">Soon</div>
-                        </div>
-                    </div>
+                    <button
+                        onClick={handleEmployerClick}
+                        className="user-type-btn btn-secondary"
+                    >
+                        I'm looking for a Nanny
+                    </button>
                 </div>
             </div>
 
@@ -182,22 +166,28 @@ function HomePage({ onUserTypeSelect, jobs }) {
                 <section className="featured-profiles">
                     <h2>Featured Nannies</h2>
                     <div className="profiles-grid">
-                        {featuredProfiles.map(profile => (
+                        {featuredProfiles.map((profile) => (
                             <div key={profile.id} className="profile-card">
-                                <img src={profile.photo} alt={profile.name} className="profile-photo"/>
+                                <img
+                                    src={profile.photo}
+                                    alt={profile.name}
+                                    className="profile-photo"
+                                />
                                 <div className="profile-info">
                                     <h3>{profile.name}</h3>
                                     <p className="nationality">{profile.nationality}</p>
-                                    <p className="experience">{profile.experience} experience</p>
+                                    <p className="experience">
+                                        {profile.experience} experience
+                                    </p>
                                     <div className="languages">
-                                        {profile.languages.map(lang => (
+                                        {profile.languages.map((lang) => (
                                             <span key={lang} className="language-tag">
                                                 {lang}
                                             </span>
                                         ))}
                                     </div>
                                     <div className="specialties">
-                                        {profile.specialties.map(specialty => (
+                                        {profile.specialties.map((specialty) => (
                                             <span key={specialty} className="specialty-tag">
                                                 {specialty}
                                             </span>
@@ -206,9 +196,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
                                     <div className="location">
                                         <span>{profile.location}</span>
                                     </div>
-                                    <div className="rating">
-                                        ⭐ {profile.rating}
-                                    </div>
+                                    <div className="rating">⭐ {profile.rating}</div>
                                 </div>
                             </div>
                         ))}
@@ -216,11 +204,48 @@ function HomePage({ onUserTypeSelect, jobs }) {
                 </section>
             </div>
 
+            <section className="job-feed-section">
+                <h2>Job Postings</h2>
+                {jobs.length === 0 ? (
+                    <p>No job postings yet. Be the first to post a job!</p>
+                ) : (
+                    <div className="profiles-grid">
+                        {jobs.map((job, index) => (
+                            <div key={index} className="profile-card job-card">
+                                <div className="profile-info">
+                                    <h3>{job.employer_name}</h3>
+                                    <p>
+                                        <strong>Rate:</strong> {job.rate} AED/month
+                                    </p>
+                                    <p>
+                                        <strong>Location:</strong> {job.location}
+                                    </p>
+                                    <p>
+                                        <strong>Number of Kids:</strong> {job.kids_count}
+                                    </p>
+                                    {job.notes && (
+                                        <p>
+                                            <strong>Notes:</strong> {job.notes}
+                                        </p>
+                                    )}
+                                    <p>
+                                        <strong>Contact Email:</strong> {job.contact_email}
+                                    </p>
+                                    <p>
+                                        <strong>Contact Phone:</strong> {job.contact_phone}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
+
             <section className="testimonials">
-                <h2>Why UAE families use Dubai Nannies: </h2>
+                <h2>Why UAE families use Dubai Nannies:</h2>
                 <div className="testimonial-slider">
                     <button onClick={prevTestimonial} className="slider-button">
-                        <ChevronLeft/>
+                        <ChevronLeft />
                     </button>
                     <div className="testimonial-content">
                         <p>"{testimonials[currentTestimonial].text}"</p>
@@ -231,31 +256,11 @@ function HomePage({ onUserTypeSelect, jobs }) {
                         </div>
                     </div>
                     <button onClick={nextTestimonial} className="slider-button">
-                        <ChevronRight/>
+                        <ChevronRight />
                     </button>
                 </div>
             </section>
 
-            <section className="job-feed-section">
-                <h2>Latest Job Postings</h2>
-                {jobs.length === 0 ? (
-                    <p>No job postings yet. Be the first to post a job!</p>
-                ) : (
-                    <ul className="job-feed-list">
-                        {jobs.map((job, index) => (
-                            <li key={index} className="job-card">
-                                <h3>{job.employer_name}</h3>
-                                <p><strong>Rate:</strong> {job.rate} AED/month</p>
-                                <p><strong>Location:</strong> {job.location}</p>
-                                <p><strong>Number of Kids:</strong> {job.kids_count}</p>
-                                {job.notes && <p><strong>Notes:</strong> {job.notes}</p>}
-                                <p><strong>Contact Email:</strong> {job.contact_email}</p>
-                                <p><strong>Contact Phone:</strong> {job.contact_phone}</p>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </section>
             <WhatsAppButton />
         </div>
     );

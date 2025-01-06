@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 function JobPosting({ addJob }) {
     const navigate = useNavigate();
+    const { supabase } = useAuth();
+
     const [formData, setFormData] = useState({
         employerName: '',
         contactEmail: '',
@@ -12,7 +15,6 @@ function JobPosting({ addJob }) {
         kidsCount: '',
         notes: '',
         captchaAnswer: '',
-        // New fields
         jobType: '',
         liveInOption: '',
         nationality: '',
@@ -39,8 +41,9 @@ function JobPosting({ addJob }) {
             const expiryDate = new Date();
             expiryDate.setMonth(expiryDate.getMonth() + 1);
 
+            // Insert into 'jobpostings' table
             const { data, error } = await supabase
-                .from('postings')
+                .from('jobpostings')
                 .insert([
                     {
                         rate: parseInt(formData.rate, 10),
@@ -67,7 +70,7 @@ function JobPosting({ addJob }) {
                 addJob(data);
             }
 
-            navigate(`/posting-success/${data.id}`);
+            navigate(`/`);
         } catch (error) {
             console.error('Error creating posting:', error);
             alert('Failed to create posting. Please try again.');
@@ -80,9 +83,6 @@ function JobPosting({ addJob }) {
             <p>It's free for the first month. After that, it's 99 AED per post (valid for 1 month).</p>
 
             <form onSubmit={handleSubmit} className="job-posting-form">
-                {/* Worker Name */}
-
-                {/* Job Type */}
                 <div className="form-group">
                     <label htmlFor="jobType">Position Type:</label>
                     <select
@@ -98,7 +98,6 @@ function JobPosting({ addJob }) {
                     </select>
                 </div>
 
-                {/* Live In Option */}
                 <div className="form-group">
                     <label htmlFor="liveInOption">Live in/out:</label>
                     <select
@@ -113,7 +112,6 @@ function JobPosting({ addJob }) {
                     </select>
                 </div>
 
-                {/* Nationality */}
                 <div className="form-group">
                     <label htmlFor="nationality">Nationality Preference:</label>
                     <input
@@ -125,7 +123,6 @@ function JobPosting({ addJob }) {
                     />
                 </div>
 
-                {/* Driving License */}
                 <div className="form-group">
                     <label htmlFor="drivingLicense">Driving License Required:</label>
                     <select

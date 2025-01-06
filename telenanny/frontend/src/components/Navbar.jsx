@@ -3,18 +3,16 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
-function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we'll get it from context
+function Navbar({ userType, onUserTypeChange }) {
     const [language, setLanguage] = useState('EN');
     const [nannyName, setNannyName] = useState('');
     const navigate = useNavigate();
-    const { supabase, user } = useAuth();  // Get user from auth context
+    const { supabase, user } = useAuth();
 
     useEffect(() => {
         const fetchNannyName = async () => {
-
             if (user?.id) {
                 try {
-                    // Using the auth user ID to fetch from nannies table
                     const { data, error } = await supabase
                         .from('nannies')
                         .select('name')
@@ -45,7 +43,7 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
         fetchNannyName();
     }, [user, supabase]);
 
-    // Add debugging log for render
+    // Debugging
     console.log('Navbar render state:', {
         userFromContext: user?.id,
         nannyName,
@@ -54,7 +52,7 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
     });
 
     const toggleLanguage = () => {
-        setLanguage(prev => prev === 'EN' ? 'RU' : 'EN');
+        setLanguage(prev => (prev === 'EN' ? 'RU' : 'EN'));
     };
 
     const handleNannyClick = () => {
@@ -64,7 +62,8 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
 
     const handleEmployerClick = () => {
         onUserTypeChange('EMPLOYER');
-        navigate('/find-nanny');
+        // Navigate to the job-post form
+        navigate('/post-job');
     };
 
     const handleSignOut = async () => {
@@ -78,22 +77,18 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
                 <div className="nav-left">
                     <Link to="/" className="logo-link flex items-center gap-2">
                         <h1>Dubai Nannies</h1>
-                        <span
-                            className="bg-[#2563eb] text-white text-xs px-2 py-0.5 rounded-full font-medium">Beta</span>
+                        <span className="bg-[#2563eb] text-white text-xs px-2 py-0.5 rounded-full font-medium">Beta</span>
                     </Link>
                     {user && nannyName && (
                         <div className="user-profile ml-4 flex items-center">
-                            <User size={20} className="text-gray-600"/>
+                            <User size={20} className="text-gray-600" />
                             <span className="ml-2 text-gray-700">{nannyName}</span>
                         </div>
                     )}
                 </div>
 
-                <button
-                    onClick={toggleLanguage}
-                    className="language-toggle"
-                >
-                    <Globe size={20}/>
+                <button onClick={toggleLanguage} className="language-toggle">
+                    <Globe size={20} />
                     {language}
                 </button>
 
@@ -103,27 +98,17 @@ function Navbar({ userType, onUserTypeChange }) {  // Removed user prop since we
                             <Link to="/account" className="account-link">
                                 <span>{user.email}</span>
                             </Link>
-                            <button
-                                onClick={handleSignOut}
-                                className="signout-button"
-                            >
+                            <button onClick={handleSignOut} className="signout-button">
                                 Sign Out
                             </button>
                         </div>
                     ) : (
                         <div className="navbar-buttons">
-                            <button
-                                onClick={handleNannyClick}
-                                className="nav-button"
-                            >
+                            <button onClick={handleNannyClick} className="nav-button">
                                 I'm a nanny
                             </button>
-                            <button
-                                onClick={handleEmployerClick}
-                                className="nav-button opacity-50 cursor-not-allowed"
-                                disabled={true}
-                            >
-                                I'm looking for a nanny <span className="text-sm">(Coming Soon)</span>
+                            <button onClick={handleEmployerClick} className="nav-button">
+                                I'm looking for a nanny
                             </button>
                         </div>
                     )}

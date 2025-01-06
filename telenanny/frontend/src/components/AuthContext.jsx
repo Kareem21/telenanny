@@ -4,8 +4,6 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-
-
 if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase environment variables');
     throw new Error('Missing Supabase environment variables');
@@ -19,8 +17,6 @@ const BASE_URL = import.meta.env.MODE === 'development'
 const AUTH_CALLBACK_URL = import.meta.env.MODE === 'development'
     ? 'http://localhost:5173/auth/callback'
     : 'https://nanniestest2.vercel.app/auth/callback';
-
-
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
@@ -56,8 +52,12 @@ export const AuthProvider = ({ children }) => {
         const initializeAuth = async () => {
             console.log('initializeAuth called');
             try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const {
+                    data: { session },
+                    error
+                } = await supabase.auth.getSession();
                 console.log('getSession result - session:', session, 'error:', error);
+
                 if (error) throw error;
 
                 if (session) {
@@ -77,14 +77,14 @@ export const AuthProvider = ({ children }) => {
         initializeAuth();
 
         console.log('Setting up onAuthStateChange subscription...');
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
-                console.log('Auth event:', event, 'Session:', session);
-                setSession(session);
-                setUser(session?.user ?? null);
-                setLoading(false);
-            }
-        );
+        const {
+            data: { subscription }
+        } = supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('Auth event:', event, 'Session:', session);
+            setSession(session);
+            setUser(session?.user ?? null);
+            setLoading(false);
+        });
 
         return () => {
             console.log('Cleaning up onAuthStateChange subscription');
