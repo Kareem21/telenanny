@@ -172,6 +172,28 @@ function safeJSONParse(str, fallback = null) {
     return fallback;
   }
 }
+// Get all job postings
+
+app.get('/api/jobpostings', async (req, res) => {
+  console.log('=== GET /api/jobpostings ===');
+  try {
+    const { data, error } = await supabase
+        .from('jobpostings')
+        .select('*');  // or specify columns you want
+
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+
+    // data is an array of job rows
+    console.log('Job postings data:', data);
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching job postings:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Routes
 // Get all nannies

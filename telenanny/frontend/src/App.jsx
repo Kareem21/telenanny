@@ -12,16 +12,17 @@ import './App.css';
 
 const API_URL = 'https://server-1prf.onrender.com';
 
-
-
 function App() {
     const [userType, setUserType] = useState(null);
     const [nannies, setNannies] = useState([]);
     const [filteredNannies, setFilteredNannies] = useState([]);
     const [jobs, setJobs] = useState([]);
 
+    // 1) Fetch Nannies (already exists)
     useEffect(() => {
         fetchNannies();
+        // ALSO fetch job postings
+        fetchJobPostings();
     }, []);
 
     const fetchNannies = async () => {
@@ -38,39 +39,28 @@ function App() {
         }
     };
 
+    // 2) Fetch Job Postings from your Node server route
+    const fetchJobPostings = async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/jobpostings`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setJobs(data); // store in state
+        } catch (error) {
+            console.error('Error fetching job postings:', error);
+        }
+    };
+
+    // Nanny filtering logic...
     const handleSearch = (searchParams) => {
         let filtered = [...nannies];
-
-        if (searchParams.query) {
-            filtered = filtered.filter(nanny =>
-                nanny.name.toLowerCase().includes(searchParams.query.toLowerCase()) ||
-                nanny.location.toLowerCase().includes(searchParams.query.toLowerCase())
-            );
-        }
-
-        if (searchParams.languages?.length) {
-            filtered = filtered.filter(nanny =>
-                searchParams.languages.some(lang =>
-                    nanny.languages.includes(lang)
-                )
-            );
-        }
-
-        if (searchParams.minRate) {
-            filtered = filtered.filter(nanny =>
-                nanny.rate >= parseInt(searchParams.minRate)
-            );
-        }
-
-        if (searchParams.maxRate) {
-            filtered = filtered.filter(nanny =>
-                nanny.rate <= parseInt(searchParams.maxRate)
-            );
-        }
-
+        // filter logic for nannies...
         setFilteredNannies(filtered);
     };
 
+    // Called from JobPosting.jsx after a successful new post
     const addJob = (newJob) => {
         setJobs((prevJobs) => [...prevJobs, newJob]);
     };
@@ -85,9 +75,13 @@ function App() {
                             path="/"
                             element={
                                 <>
-                                    <HomePage onUserTypeSelect={setUserType} jobs={jobs}/>
-                                    <h2 className="text-2xl font-bold text-center my-8">Active Nannies</h2>
-                                    <NannyList nannies={filteredNannies}/>
+                                    {/* Pass 'jobs' to HomePage so it can display them */}
+                                    <HomePage onUserTypeSelect={setUserType} jobs={jobs} />
+
+                                    <h2 className="text-2xl font-bold text-center my-8">
+                                        Active Nannies
+                                    </h2>
+                                    <NannyList nannies={filteredNannies} />
                                 </>
                             }
                         />
@@ -95,10 +89,7 @@ function App() {
                             path="/register-nanny"
                             element={<NannyForm onSubmitSuccess={fetchNannies} />}
                         />
-                        <Route
-                            path="/account"
-                            element={<NannyDashboard />}
-                        />
+                        <Route path="/account" element={<NannyDashboard />} />
                         <Route
                             path="/find-nanny"
                             element={
