@@ -25,7 +25,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
     const WhatsAppButton = () => {
         return (
             <a
-                href="https://wa.me/971585138376"
+                href="https://wa.me/971585639166"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-button"
