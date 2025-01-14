@@ -137,17 +137,15 @@ function HomePage({ onUserTypeSelect, jobs, nannies }) {
                 </div>
             </div>
 
-            <div className="dual-section-container">
-                <section className="featured-profiles">
-                    <h2>Featured Nannies</h2>
-                    <NannyList nannies={nannies} />
-                    <div className="show-more-container">
-                        <Link to="/allnannies" className="show-more-button">
-                            Show more nannies
-                        </Link>
-                    </div>
-                </section>
-            </div>
+            <section className="featured-profiles px-4 py-8">
+                <h2 className="text-2xl font-bold mb-4">Featured Nannies</h2>
+                <NannyList nannies={nannies} />
+                <div className="mt-6 text-center">
+                    <Link to="/allnannies" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Show more nannies
+                    </Link>
+                </div>
+            </section>
 
             <section className="job-feed-section">
                 <h2>Job Postings</h2>
