@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import NannyList from './NannyList';
 
 function HomePage({ onUserTypeSelect, jobs }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -64,44 +65,21 @@ function HomePage({ onUserTypeSelect, jobs }) {
     };
 
     // Hard-coded featuredProfiles for demo
-    const featuredProfiles = [
-        {
-            id: 1,
-            name: 'Maria S.',
-            nationality: 'Nigerian',
-            experience: '5 years',
-            languages: ['English', 'Filipino', 'Arabic'],
-            rating: 4.9,
-            photo:
-                'https://excellencecenter.ae/wp-content/uploads/2024/07/Light-Blue-Travel-to-Dubai-Instagram-Post-42.jpg',
-            location: 'Dubai Marina',
-            specialties: ['Newborn Care', 'Cooking', 'First Aid Certified'],
-        },
-        {
-            id: 2,
-            name: 'Anna K.',
-            nationality: 'Ethiopian',
-            experience: '7 years',
-            languages: ['English', 'Russian'],
-            rating: 4.8,
-            photo:
-                'https://maidfinder.ae/maid/assets/profiles/446052508_1919538038500256_6255546291029296217_n.webp',
-            location: 'Palm Jumeirah',
-            specialties: ['Child Development', 'Swimming', 'Educational Activities'],
-        },
-        {
-            id: 3,
-            name: 'Sarah M.',
-            nationality: 'Filipino',
-            experience: '4 years',
-            languages: ['English', 'Arabic'],
-            rating: 4.7,
-            photo:
-                'https://find-nanny-and-maid.com/MaidImage/WhatsApp%20Image%202024-05-02%20at%205_IM_2024050707351630.jpeg',
-            location: 'Downtown Dubai',
-            specialties: ['Special Needs Care', 'Homework Help', 'Arts & Crafts'],
-        },
-    ];
+    const [featuredNannies, setFeaturedNannies] = useState([]);
+
+    useEffect(() => {
+        const fetchFeaturedNannies = async () => {
+            try {
+                const response = await fetch('http://localhost:5002/api/nannies');
+                const data = await response.json();
+                setFeaturedNannies(data.slice(0, 6)); // Get only the first 6 nannies
+            } catch (error) {
+                console.error('Error fetching nannies:', error);
+            }
+        };
+
+        fetchFeaturedNannies();
+    }, []);
 
     // Simple testimonials
     const testimonials = [
@@ -176,35 +154,11 @@ function HomePage({ onUserTypeSelect, jobs }) {
             <div className="dual-section-container">
                 <section className="featured-profiles">
                     <h2>Featured Nannies</h2>
-                    <div className="profiles-grid">
-                        {featuredProfiles.map((profile) => (
-                            <div key={profile.id} className="profile-card">
-                                <img src={profile.photo} alt={profile.name} className="profile-photo" />
-                                <div className="profile-info">
-                                    <h3>{profile.name}</h3>
-                                    <p className="nationality">{profile.nationality}</p>
-                                    <p className="experience">{profile.experience} experience</p>
-                                    <div className="languages">
-                                        {profile.languages.map((lang) => (
-                                            <span key={lang} className="language-tag">
-                        {lang}
-                      </span>
-                                        ))}
-                                    </div>
-                                    <div className="specialties">
-                                        {profile.specialties.map((specialty) => (
-                                            <span key={specialty} className="specialty-tag">
-                        {specialty}
-                      </span>
-                                        ))}
-                                    </div>
-                                    <div className="location">
-                                        <span>{profile.location}</span>
-                                    </div>
-                                    <div className="rating">⭐ {profile.rating}</div>
-                                </div>
-                            </div>
-                        ))}
+                    <NannyList nannies={featuredNannies} />
+                    <div className="show-more-container">
+                        <Link to="/allnannies" className="show-more-button">
+                            Show more nannies
+                        </Link>
                     </div>
                 </section>
             </div>
