@@ -72,7 +72,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
             try {
                 const response = await fetch('http://localhost:5002/api/nannies');
                 const data = await response.json();
-                setFeaturedNannies(data.slice(0, 6)); // Get only the first 6 nannies
+                setFeaturedNannies(data.slice(0, 5)); // Get only the first 5 nannies
             } catch (error) {
                 console.error('Error fetching nannies:', error);
             }
