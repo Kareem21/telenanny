@@ -94,13 +94,11 @@ function App() {
                             path="/"
                             element={
                                 <>
-                                    {/* Pass the jobs array to HomePage so it can display them */}
-                                    <HomePage onUserTypeSelect={setUserType} jobs={jobs} />
-
-                                    <h2 className="text-2xl font-bold text-center my-8">
-                                        Active Nannies
-                                    </h2>
-                                    <NannyList nannies={filteredNannies} />
+                                    <HomePage 
+                                        onUserTypeSelect={setUserType} 
+                                        jobs={jobs} 
+                                        nannies={filteredNannies.slice(0, 5)}
+                                    />
                                 </>
                             }
                         />

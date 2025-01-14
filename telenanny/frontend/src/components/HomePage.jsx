@@ -154,7 +154,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
             <div className="dual-section-container">
                 <section className="featured-profiles">
                     <h2>Featured Nannies</h2>
-                    <NannyList nannies={featuredNannies} />
+                    <NannyList nannies={nannies} />
                     <div className="show-more-container">
                         <Link to="/allnannies" className="show-more-button">
                             Show more nannies
