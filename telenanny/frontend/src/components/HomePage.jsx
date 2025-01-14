@@ -8,11 +8,6 @@ function HomePage({ onUserTypeSelect, jobs, nannies }) {
     const [lastScrollY, setLastScrollY] = useState(0);
     const navigate = useNavigate();
 
-    // Log whenever "jobs" or "nannies" change
-    useEffect(() => {
-        console.log('[HomePage] jobs from props:', jobs);
-        console.log('[HomePage] nannies from props:', nannies);
-    }, [jobs, nannies]);
 
     // Track scroll to move floating WhatsApp button
     useEffect(() => {

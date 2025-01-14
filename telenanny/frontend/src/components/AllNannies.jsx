@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NannyList from './NannyList';
-import Navbar from './Navbar';
-import Footer from './Footer';
+
 
 function AllNannies() {
     const [nannies, setNannies] = useState([]);
@@ -27,7 +26,6 @@ function AllNannies() {
 
     return (
         <div className="all-nannies-page">
-            <Navbar />
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-3xl font-bold mb-6">All Nannies</h1>
                 {loading ? (
@@ -36,7 +34,6 @@ function AllNannies() {
                     <NannyList nannies={nannies} />
                 )}
             </div>
-            <Footer />
         </div>
     );
 }
