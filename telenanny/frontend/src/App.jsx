@@ -8,6 +8,7 @@ import NannyDashboard from './components/NannyDashboard';
 import NannySeekerForm from './components/NannySeekerForm';
 import HomePage from './components/HomePage';
 import JobPosting from './components/Jobposting';
+import AllNannies from './components/AllNannies';
 import './App.css';
 
 const API_URL = 'https://server-1prf.onrender.com';
@@ -119,6 +120,10 @@ function App() {
                         <Route
                             path="/post-job"
                             element={<JobPosting addJob={addJob} />}
+                        />
+                        <Route
+                            path="/allnannies"
+                            element= <AllNannies  />
                         />
                         <Route
                             path="*"
