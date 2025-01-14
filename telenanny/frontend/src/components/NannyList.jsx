@@ -11,9 +11,14 @@ function NannyList({ nannies }) {
                 <div key={nanny.id} className="nanny-profile-pic">
                     <div className="w-12 h-12 overflow-hidden rounded-full">
                         {nanny.profile_image_url ? (
-                            <img src={nanny.profile_image_url} alt={nanny.name} className="w-full h-full object-cover" />
+                            <img 
+                                src={nanny.profile_image_url} 
+                                alt={nanny.name} 
+                                className="w-12 h-12 object-cover"
+                                style={{ width: '48px', height: '48px' }}
+                            />
                         ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500 text-xs">No Image</span>
                             </div>
                         )}
