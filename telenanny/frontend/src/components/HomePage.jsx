@@ -134,10 +134,12 @@ function HomePage({ onUserTypeSelect, jobs, nannies }) {
 
             <section className="featured-profiles px-4 py-8">
                 <h2 className="text-2xl font-bold mb-4">Featured Nannies</h2>
-                <NannyList nannies={nannies} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <NannyList nannies={nannies} />
+                </div>
                 <div className="mt-6 text-center">
                     <Link to="/allnannies" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded text-xl">
-                        SHOW ALL 50+ ACTIVE NANNIES
+                        <strong>SHOW ALL 50+ ACTIVE NANNIES</strong>
                     </Link>
                 </div>
             </section>

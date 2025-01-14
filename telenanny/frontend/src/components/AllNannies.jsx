@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NannyList from './NannyList';
 
-
 function AllNannies() {
     const [nannies, setNannies] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +10,10 @@ function AllNannies() {
     useEffect(() => {
         const fetchNannies = async () => {
             try {
-                const response = await fetch('http://localhost:5002/api/nannies');
+                const response = await fetch('https://server-1prf.onrender.com/api/nannies');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 setNannies(data);
                 setLoading(false);
@@ -31,7 +33,9 @@ function AllNannies() {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <NannyList nannies={nannies} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <NannyList nannies={nannies} />
+                    </div>
                 )}
             </div>
         </div>
