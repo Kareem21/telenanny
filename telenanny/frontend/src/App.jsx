@@ -28,39 +28,29 @@ function App() {
     // 1) Fetch Nannies
     const fetchNannies = async () => {
         try {
-            console.log('[CLIENT] Calling fetchNannies()...');
             const response = await fetch(`${API_URL}/api/nannies`);
-            console.log('[CLIENT] Nannies Response object:', response);
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('[CLIENT] Fetched nannies data:', data);
-
             setNannies(data);
             setFilteredNannies(data);
         } catch (error) {
-            console.error('[CLIENT] Error fetching nannies:', error);
+            // Handle error
         }
     };
 
     // 2) Fetch Job Postings
     const fetchJobPostings = async () => {
         try {
-            console.log('[CLIENT] Calling fetchJobPostings()...');
             const response = await fetch(`${API_URL}/api/jobpostings`);
-            console.log('[CLIENT] JobPostings Response object:', response);
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('[CLIENT] Fetched job postings data:', data);
-
             setJobs(data);
         } catch (error) {
-            console.error('[CLIENT] Error fetching job postings:', error);
+            // Handle error
         }
     };
 
