@@ -3,15 +3,16 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import NannyList from './NannyList';
 
-function HomePage({ onUserTypeSelect, jobs }) {
+function HomePage({ onUserTypeSelect, jobs, nannies }) {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const [lastScrollY, setLastScrollY] = useState(0);
     const navigate = useNavigate();
 
-    // Log whenever "jobs" changes
+    // Log whenever "jobs" or "nannies" change
     useEffect(() => {
         console.log('[HomePage] jobs from props:', jobs);
-    }, [jobs]);
+        console.log('[HomePage] nannies from props:', nannies);
+    }, [jobs, nannies]);
 
     // Track scroll to move floating WhatsApp button
     useEffect(() => {
@@ -64,22 +65,7 @@ function HomePage({ onUserTypeSelect, jobs }) {
         );
     };
 
-    // Hard-coded featuredProfiles for demo
-    const [featuredNannies, setFeaturedNannies] = useState([]);
-
-    useEffect(() => {
-        const fetchFeaturedNannies = async () => {
-            try {
-                const response = await fetch('http://localhost:5002/api/nannies');
-                const data = await response.json();
-                setFeaturedNannies(data.slice(0, 5)); // Get only the first 5 nannies
-            } catch (error) {
-                console.error('Error fetching nannies:', error);
-            }
-        };
-
-        fetchFeaturedNannies();
-    }, []);
+    // Remove the featuredNannies state and useEffect
 
     // Simple testimonials
     const testimonials = [
