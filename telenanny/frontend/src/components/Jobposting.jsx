@@ -80,7 +80,7 @@ function JobPosting({ addJob }) {
     return (
         <div className="job-posting-container">
             <h1>Post Your Job</h1>
-            <p>It's free for the first month. After that, it's 99 AED per post (valid for 1 month).</p>
+            <p>It's free for the first month. After that, it's 200 AED per post (valid for 1 month).</p>
 
             <form onSubmit={handleSubmit} className="job-posting-form">
                 <div className="form-group">
