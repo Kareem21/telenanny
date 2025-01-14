@@ -19,13 +19,14 @@ function JobPosting({ addJob }) {
         liveInOption: '',
         nationality: '',
         drivingLicense: '',
+        isPremium: false,
     });
 
     const handleChange = (e) => {
-        const { id, value } = e.target;
+        const { id, value, type, checked } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [id]: value,
+            [id]: type === 'checkbox' ? checked : value,
         }));
     };
 
@@ -37,9 +38,19 @@ function JobPosting({ addJob }) {
             return;
         }
 
+        if (formData.isPremium) {
+            // Here you would typically integrate with a payment gateway
+            const confirmed = window.confirm("You've selected a premium posting. This will cost 200 AED. Do you want to proceed to payment?");
+            if (!confirmed) {
+                return;
+            }
+            // Process payment here
+            alert("Payment of 200 AED processed successfully!");
+        }
+
         try {
             const expiryDate = new Date();
-            expiryDate.setMonth(expiryDate.getMonth() + 1);
+            expiryDate.setMonth(expiryDate.getMonth() + (formData.isPremium ? 2 : 1));
 
             // Insert into 'jobpostings' table
             const { data, error } = await supabase
@@ -59,6 +70,7 @@ function JobPosting({ addJob }) {
                         driving_license: formData.drivingLicense,
                         expiry_date: expiryDate.toISOString(),
                         status: 'active',
+                        is_premium: formData.isPremium,
                     },
                 ])
                 .select()
@@ -80,9 +92,18 @@ function JobPosting({ addJob }) {
     return (
         <div className="job-posting-container">
             <h1>Post Your Job</h1>
-            <p>It's free for the first month. After that, it's 200 AED per post (valid for 1 month).</p>
+            <p>Choose between a free 1-month posting or a premium 2-month posting for 200 AED.</p>
 
             <form onSubmit={handleSubmit} className="job-posting-form">
+                <div className="form-group">
+                    <label htmlFor="isPremium">Premium Posting (200 AED for 2 months):</label>
+                    <input
+                        type="checkbox"
+                        id="isPremium"
+                        checked={formData.isPremium}
+                        onChange={handleChange}
+                    />
+                </div>
                 <div className="form-group">
                     <label htmlFor="jobType">Position Type:</label>
                     <select
