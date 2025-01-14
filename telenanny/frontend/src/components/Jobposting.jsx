@@ -91,18 +91,28 @@ function JobPosting({ addJob }) {
 
     return (
         <div className="job-posting-container">
-            <h1>Post Your Job</h1>
-            <p>Choose between a free 1-month posting or a premium 2-month posting for 200 AED.</p>
+            <h1 className="text-3xl font-bold mb-4">Post Your Job</h1>
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-lg shadow-md mb-6">
+                <h2 className="text-xl font-semibold mb-2">Choose Your Posting Option:</h2>
+                <p className="mb-2">• Free 1-month standard posting</p>
+                <p className="font-bold">• Premium 2-month posting for only 200 AED!</p>
+            </div>
 
             <form onSubmit={handleSubmit} className="job-posting-form">
-                <div className="form-group">
-                    <label htmlFor="isPremium">Premium Posting (200 AED for 2 months):</label>
-                    <input
-                        type="checkbox"
-                        id="isPremium"
-                        checked={formData.isPremium}
-                        onChange={handleChange}
-                    />
+                <div className="form-group bg-yellow-100 p-4 rounded-lg shadow-sm">
+                    <label htmlFor="isPremium" className="flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            id="isPremium"
+                            checked={formData.isPremium}
+                            onChange={handleChange}
+                            className="form-checkbox h-5 w-5 text-blue-600"
+                        />
+                        <span className="ml-2 text-lg font-semibold">
+                            ⭐️ Premium Posting (200 AED for 2 months)
+                        </span>
+                    </label>
+                    <p className="mt-2 text-sm text-gray-600">Get more visibility and find the perfect nanny faster!</p>
                 </div>
                 <div className="form-group">
                     <label htmlFor="jobType">Position Type:</label>
@@ -253,7 +263,9 @@ function JobPosting({ addJob }) {
                     />
                 </div>
 
-                <button type="submit" className="btn-primary">Submit Job Post</button>
+                <button type="submit" className="btn-primary bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+                    ⭐️ Submit Job Post ⭐️
+                </button>
             </form>
         </div>
     );
