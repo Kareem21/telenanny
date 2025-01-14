@@ -63,33 +63,31 @@ function Navbar({ userType, onUserTypeChange }) {
         <nav className="bg-white shadow-md w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
-                    <div className="flex">
-                        <Link to="/" className="flex-shrink-0 flex items-center">
+                    <div className="flex-shrink-0 flex items-center">
+                        <Link to="/" className="flex items-center">
                             <h1 className="text-xl font-bold text-gray-800">Dubai Nannies</h1>
                             <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">Beta</span>
                         </Link>
                     </div>
                     <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                        <button onClick={toggleLanguage} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100">
+                        <button onClick={toggleLanguage} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out">
                             <Globe size={20} className="inline-block mr-1" />
                             {language}
                         </button>
                         {user ? (
-                            <div className="ml-3 relative">
-                                <div className="flex items-center">
-                                    <User size={20} className="text-gray-600 mr-1" />
-                                    <span className="text-gray-700 mr-2">{nannyName || user.email}</span>
-                                    <button onClick={handleSignOut} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                                        Sign Out
-                                    </button>
-                                </div>
+                            <div className="ml-3 relative flex items-center">
+                                <User size={20} className="text-gray-600 mr-2" />
+                                <span className="text-gray-700 mr-4">{nannyName || user.email}</span>
+                                <button onClick={handleSignOut} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
+                                    Sign Out
+                                </button>
                             </div>
                         ) : (
-                            <div className="ml-3 flex items-center">
-                                <button onClick={handleNannyClick} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2">
+                            <div className="ml-3 flex items-center space-x-4">
+                                <button onClick={handleNannyClick} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
                                     I'm a nanny
                                 </button>
-                                <button onClick={handleEmployerClick} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                                <button onClick={handleEmployerClick} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
                                     I'm looking for a nanny
                                 </button>
                             </div>
@@ -106,7 +104,7 @@ function Navbar({ userType, onUserTypeChange }) {
             {isMenuOpen && (
                 <div className="sm:hidden">
                     <div className="pt-2 pb-3 space-y-1">
-                        <button onClick={toggleLanguage} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition duration-150 ease-in-out">
+                        <button onClick={toggleLanguage} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition duration-150 ease-in-out">
                             <Globe size={20} className="inline-block mr-1" />
                             {language}
                         </button>
