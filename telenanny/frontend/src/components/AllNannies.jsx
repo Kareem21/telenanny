@@ -1,3 +1,5 @@
+
+// AllNannies.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NannyList from './NannyList';
@@ -27,15 +29,15 @@ function AllNannies() {
     }, []);
 
     return (
-        <div className="all-nannies-page">
-            <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold mb-6">All Nannies</h1>
+        <div className="min-h-screen bg-gray-50">
+            <div className="container mx-auto py-8">
+                <h1 className="text-3xl font-bold text-center mb-8">Available Nannies</h1>
                 {loading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <NannyList nannies={nannies} />
+                    <div className="flex justify-center items-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                     </div>
+                ) : (
+                    <NannyList nannies={nannies} />
                 )}
             </div>
         </div>

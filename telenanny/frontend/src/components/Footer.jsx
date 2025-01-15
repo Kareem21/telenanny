@@ -14,8 +14,7 @@ function Footer() {
                 <div className="footer-section">
                     <h4>Contact Us</h4>
                     <div className="contact-item">
-                        <a
-                            href="https://wa.me/971585138376"
+                        <a href="https://wa.me/971585639166"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="whatsapp-link"

@@ -144,32 +144,8 @@ function HomePage({ onUserTypeSelect, jobs, nannies }) {
                 </div>
             </section>
 
-            <section className="premium-job-section bg-gradient-to-r from-yellow-100 to-yellow-300 py-12 px-4 mb-8">
-                <h2 className="text-3xl font-bold text-center mb-8 text-yellow-800">⭐ Premium Job Postings ⭐</h2>
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden border-4 border-yellow-500">
-                        <div className="p-6">
-                            <h3 className="text-2xl font-semibold text-yellow-800 mb-4">Experienced Nanny Needed for Twins</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <p><strong>Location:</strong> Dubai Marina</p>
-                                <p><strong>Rate:</strong> 5000 AED/month</p>
-                                <p><strong>Children:</strong> 2 (Twins, Age 3)</p>
-                                <p><strong>Hours:</strong> Full-time, Live-in</p>
-                            </div>
-                            <p className="mt-4"><strong>Requirements:</strong> Minimum 5 years experience, First Aid Certified, Fluent in English and Arabic</p>
-                            <div className="mt-6 flex justify-between items-center">
-                                <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
-                                    Apply Now
-                                </button>
-                                <span className="text-yellow-600 font-semibold">Posted 2 days ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section className="job-feed-section">
-                <h2>Regular Job Postings</h2>
+                <h2>Job Postings</h2>
                 {jobs.length === 0 ? (
                     <p>No job postings yet. Be the first to post a job!</p>
                 ) : (
