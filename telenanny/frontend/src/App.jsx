@@ -3,8 +3,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./components/HomePage";
-import AllNannies from "./components/AllNannies";
-import JobPosting from "./components/JobPosting";
+import AllNannies from "./components/Allnannies";
+import JobPosting from "./components/Jobposting";
 import NannyForm from "./components/NannyForm";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
