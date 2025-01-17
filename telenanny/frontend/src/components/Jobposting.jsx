@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './JobPosting.css';
+import './Jobposting.css';
 
 import { createClient } from '@supabase/supabase-js';
 const supabase = createClient(
