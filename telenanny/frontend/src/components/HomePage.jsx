@@ -197,7 +197,6 @@ function HomePage() {
                         <div className="stars">★★★★★</div>
                         <p className="review-text">The team has significantly contributed to our family's happiness by finding us the perfect nanny. Their process added a unique personal touch to our search. Kudos to the team for their professionalism.</p>
                         <p className="reviewer-name">Beneli Sari</p>
-                        <p className="reviewer-company">Mysk</p>
                     </div>
                 </div>
             </section>
