@@ -3,8 +3,8 @@ import './Jobposting.css';
 
 import { createClient } from '@supabase/supabase-js';
 const supabase = createClient(
-    'https://ejbiorpholetwkprfrfj.supabase.co',  // <-- Replace with your real URL
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqYmlvcnBob2xldHdrcHJmcmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2NzMxMTUsImV4cCI6MjA0OTI0OTExNX0.5-YNb6hjUmkvI1VXpcsItaUbQopiYlq7wdgjNsjEXEo' // <-- Replace with your real anon key
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 function JobPosting() {
     const [formData, setFormData] = useState({
