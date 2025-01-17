@@ -190,14 +190,13 @@ function HomePage() {
                     <div className="review-card">
                         <div className="stars">★★★★★</div>
                         <p className="review-text">We were very pleased with our nanny from Dubai Nannies. Their entire process including communication, selection and final placement was excellent. Not only is the service professionally managed, but the functionality is also seamless. Throughout the process, we were very happy with their professionalism and responsiveness. Would highly recommend.</p>
-                        <p className="reviewer-name">Fiesty</p>
+                        <p className="reviewer-name">Mane syrgytstan </p>
                     </div>
 
                     <div className="review-card">
                         <div className="stars">★★★★★</div>
                         <p className="review-text">The team has significantly contributed to our family's happiness by finding us the perfect nanny. Their process added a unique personal touch to our search. Kudos to the team for their professionalism.</p>
                         <p className="reviewer-name">Beneli Sari</p>
-                        <p className="reviewer-title">Marketing Manager</p>
                         <p className="reviewer-company">Mysk</p>
                     </div>
                 </div>
