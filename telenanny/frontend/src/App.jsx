@@ -9,6 +9,8 @@ import NannyForm from "./components/NannyForm";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AllPostings from "./components/AllPostings";
+import { Analytics } from '@vercel/analytics/react';
+
 import "./App.css"; // Global styles
 
 function App() {
