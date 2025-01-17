@@ -36,7 +36,10 @@ function App() {
                 />
             </a>
             <Footer></Footer>
+
+            <Analytics />
         </Router>
+
     );
 }
 
