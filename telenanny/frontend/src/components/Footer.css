@@ -1,0 +1,107 @@
+/* src/components/Footer.css */
+.custom-footer {
+    background-color: var(--dark-blue);
+    color: var(--text-light); /* Ensures all text uses the light color */
+    padding: 2rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+    max-width: 1200px;
+    gap: 2rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+/* Left: Brand, Social, Phones */
+.footer-brand {
+    flex: 1 1 200px;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.brand-logo {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.brand-logo img {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.brand-logo h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+.brand-logo p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    opacity: 0.8;
+    margin-bottom: 1rem;
+}
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.social-icons img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+/* Middle columns */
+.footer-col {
+    flex: 1 1 150px;
+    min-width: 150px;
+}
+.footer-col h4 {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--text-light);
+    padding-bottom: 0.25rem;
+}
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-col ul li {
+    margin-bottom: 0.5rem;
+}
+.footer-col ul a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.footer-col ul a:hover {
+    text-decoration: underline;
+}
+
+/* Footer bottom */
+.footer-bottom {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    opacity: 0.9;
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    padding-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .footer-inner {
+        justify-content: center;
+    }
+    .footer-col {
+        margin-top: 1rem;
+    }
+}

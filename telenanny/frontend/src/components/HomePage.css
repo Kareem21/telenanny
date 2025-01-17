@@ -1,0 +1,361 @@
+
+:root {
+    --dark-blue: #002F47;
+    --light-cream: #FFF8E7;
+    --soft-blue: #A8D5F2;
+    --gold-highlight: #FFD700;
+    --text-dark: #1E293B;
+    --text-light: #FFFFFF;
+    --cta-hover: #4FA3D1;
+
+    /* Typography */
+    --font-heading: 'Caveat', cursive;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Home Container */
+.home-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* HERO SECTION */
+.hero-section {
+    background: var(--dark-blue);
+    color: var(--text-light);
+    text-align: center;
+    padding: 5rem 1rem;
+    position: relative;
+}
+.hero-section h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+.hero-btn {
+    background-color: var(--soft-blue);
+    color: var(--dark-blue);
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.hero-btn:hover {
+    background-color: var(--cta-hover);
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
+.hero-btn.alt {
+    background-color: var(--light-cream);
+    color: var(--dark-blue);
+}
+.hero-btn.alt:hover {
+    background-color: var(--cta-hover);
+    color: var(--text-light);
+}
+.hero-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: var(--light-cream);
+    clip-path: ellipse(120% 50% at 50% 100%);
+    z-index: 1;
+}
+
+/* JOB POSTINGS SECTION */
+.job-postings-section {
+    background: var(--light-cream);
+    padding: 5rem 1rem;
+    text-align: center;
+    position: relative;
+}
+.job-postings-section h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+.jobs-container {
+    margin-bottom: 2rem;
+}
+.golden-jobs {
+    margin-bottom: 3rem;
+}
+.premium-label {
+    color: var(--dark-blue);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-heading);
+}
+.golden-jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 3rem 0;
+}
+.divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+}
+.divider span {
+    background: var(--light-cream);
+    padding: 0 1rem;
+    color: var(--text-dark);
+    position: relative;
+    font-size: 1.2rem;
+}
+.regular-jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.rss-item {
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: var(--text-light);
+    transition: transform 0.3s ease;
+}
+.rss-item.featured {
+    border: 2px solid var(--gold-highlight);
+    background: linear-gradient(to bottom, #fff9db, #ffebcc);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+.rss-item h3 {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.rss-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Show All Links */
+.show-all-link {
+    display: inline-block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--dark-blue);
+    text-decoration: none;
+    padding: 1rem 2rem;
+    margin-top: 2rem;
+    border: 3px solid var(--dark-blue);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.show-all-link:hover {
+    background: var(--dark-blue);
+    color: var(--text-light);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 47, 71, 0.2);
+}
+
+/* NANNY CARDS SECTION */
+.nanny-cards-section {
+    background: var(--soft-blue);
+    padding: 5rem 1rem;
+    text-align: center;
+    position: relative;
+}
+.nanny-cards-section h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+.nanny-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+.nanny-card {
+    background: var(--text-light);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.nanny-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    object-fit: cover;
+}
+.contact-btn-wrapper {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+.contact-btn {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--text-light);
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.contact-btn:hover {
+    background: var(--cta-hover);
+    transform: translateY(-2px);
+}
+
+/* REVIEWS SECTION */
+.reviews-section {
+    background: var(--light-cream);
+    padding: 5rem 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.reviews-section h2 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+}
+
+.reviews-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.review-card {
+    background: var(--text-light);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px dashed #d4af37;
+    position: relative;
+    text-align: left;
+}
+
+.stars {
+    color: #d4af37;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.review-text {
+    font-family: var(--font-body);
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.reviewer-name {
+    font-weight: bold;
+    color: var(--dark-blue);
+    margin-bottom: 0.25rem;
+}
+
+.reviewer-title {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.reviewer-company {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+/* WHY FAMILIES CHOOSE US */
+.why-families-choose-us {
+    background: var(--light-cream);
+    padding: 5rem 1rem;
+    text-align: center;
+    position: relative;
+}
+.why-families-choose-us h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.feature-item {
+    padding: 2rem;
+    background: var(--text-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.feature-item h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+.feature-item p {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* RESPONSIVENESS */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .golden-jobs-grid,
+    .regular-jobs-grid,
+    .nanny-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-buttons {
+        flex-direction: column;
+    }
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+    .feature-item {
+        margin-bottom: 1rem;
+    }
+}

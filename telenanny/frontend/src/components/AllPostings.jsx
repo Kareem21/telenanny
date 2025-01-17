@@ -1,0 +1,66 @@
+// src/pages/AllPostings.jsx
+import React, { useEffect, useState } from 'react';
+import './AllPostings.css';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+    'https://ejbiorpholetwkprfrfj.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqYmlvcnBob2xldHdrcHJmcmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2NzMxMTUsImV4cCI6MjA0OTI0OTExNX0.5-YNb6hjUmkvI1VXpcsItaUbQopiYlq7wdgjNsjEXEo'
+);
+
+function AllPostings() {
+    const [jobPostings, setJobPostings] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchJobPostings = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('jobpostings')
+                    .select('*');
+                if (!error && data) {
+                    setJobPostings(data);
+                }
+            } catch (error) {
+                console.error('Error fetching job postings:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchJobPostings();
+    }, []);
+
+    return (
+        <div className="allpostings-container">
+            <h2>All Job Postings</h2>
+
+            {loading ? (
+                <p>Loading job postings...</p>
+            ) : (
+                <div className="jobs-grid">
+                    {jobPostings.map((job) => (
+                        <div className={`job-card ${job.is_premium ? 'premium' : ''}`} key={job.id}>
+                            <div className="job-header">
+                                <h3>{job.employer_name}</h3>
+                                {job.is_premium && <span className="premium-badge">Premium</span>}
+                            </div>
+                            <div className="job-details">
+                                <p><strong>Rate:</strong> {job.rate}</p>
+                                <p><strong>Kids:</strong> {job.kids_count}</p>
+                                <p><strong>Job Type:</strong> {job.job_type}</p>
+                                <p><strong>Location:</strong> {job.location || 'Not specified'}</p>
+                                <p className="job-notes"><strong>Notes:</strong> {job.notes}</p>
+                            </div>
+                            <div className="contact-btn-wrapper">
+                                <a href={`mailto:${job.contact_email}`} className="contact-btn">Apply Now</a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default AllPostings;

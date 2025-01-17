@@ -1,0 +1,110 @@
+/* src/pages/NannyForm.css */
+:root {
+    --dark-blue: #002F47;
+    --light-cream: #FFF8E7;
+    --soft-blue: #A8D5F2;
+    --text-dark: #1E293B;
+    --text-light: #FFFFFF;
+    --cta-hover: #4FA3D1;
+}
+
+.nannyform-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem 1rem;
+}
+
+.nannyform-container h2 {
+    font-family: var(--font-heading, 'Caveat', cursive);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dark-blue);
+}
+
+.intro-text {
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    background-color: var(--light-cream);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.nannyform-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nannyform-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.inline-inputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nannyform-form input,
+.nannyform-form textarea,
+.nannyform-form select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.checkbox-section {
+    background-color: var(--light-cream);
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.section-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.nannyform-form button {
+    width: 100%;
+    background-color: var(--dark-blue);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-light);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+.nannyform-form button:hover {
+    background-color: var(--cta-hover);
+}
+
+@media (max-width: 768px) {
+    .nannyform-container {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .checkbox-group {
+        flex-direction: column;
+    }
+}

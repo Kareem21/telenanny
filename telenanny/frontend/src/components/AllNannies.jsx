@@ -1,46 +1,110 @@
+// src/pages/AllNannies.jsx
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import './AllNannies.css';
 
-// AllNannies.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import NannyList from './NannyList';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+    'https://ejbiorpholetwkprfrfj.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqYmlvcnBob2xldHdrcHJmcmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2NzMxMTUsImV4cCI6MjA0OTI0OTExNX0.5-YNb6hjUmkvI1VXpcsItaUbQopiYlq7wdgjNsjEXEo'
+);
+
+const allLanguages = [
+    'English', 'Arabic', 'Russian', 'Filipino', 'Spanish', 'Ukrainian', 'Urdu', 'Italian', 'Other'
+];
 
 function AllNannies() {
     const [nannies, setNannies] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+
+    // Filter states
+    const [filterLang, setFilterLang] = useState('');
+    const [filterNationality, setFilterNationality] = useState('');
 
     useEffect(() => {
         const fetchNannies = async () => {
-            try {
-                const response = await fetch('https://server-1prf.onrender.com/api/nannies');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
+            let { data, error } = await supabase
+                .from('nannies')
+                .select('*');
+            if (!error && data) {
                 setNannies(data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching nannies:', error);
-                setLoading(false);
             }
+            setLoading(false);
         };
-
         fetchNannies();
     }, []);
 
+    // Derived list after filters
+    const filteredNannies = nannies.filter(nanny => {
+        // Filter by language
+        if (filterLang && nanny.languages) {
+            if (!nanny.languages.includes(filterLang)) {
+                return false;
+            }
+        }
+        // Filter by nationality
+        if (filterNationality && nanny.nationality) {
+            if (nanny.nationality.toLowerCase() !== filterNationality.toLowerCase()) {
+                return false;
+            }
+        }
+        return true;
+    });
+
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="container mx-auto py-8">
-                <h1 className="text-3xl font-bold text-center mb-8">Available Nannies</h1>
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <>
+            <div className="allnannies-container">
+                <h2>All Nannies</h2>
+
+                {/* Filter UI */}
+                <div className="filter-container">
+                    <div className="filter-group">
+                        <label>Filter by Language:</label>
+                        <select
+                            value={filterLang}
+                            onChange={(e) => setFilterLang(e.target.value)}
+                        >
+                            <option value="">All Languages</option>
+                            {allLanguages.map(lang => (
+                                <option key={lang} value={lang}>{lang}</option>
+                            ))}
+                        </select>
                     </div>
+                    <div className="filter-group">
+                        <label>Filter by Nationality:</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Russian, Ethiopian"
+                            value={filterNationality}
+                            onChange={(e) => setFilterNationality(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {loading ? (
+                    <p>Loading nannies...</p>
                 ) : (
-                    <NannyList nannies={nannies} />
+                    <div className="nannies-grid">
+                        {filteredNannies.map((nanny) => (
+                            <div className="nanny-card" key={nanny.user_id}>
+                                <img
+                                    src={nanny.profile_image_url || 'https://via.placeholder.com/150'}
+                                    alt={nanny.name}
+                                />
+                                <h3>{nanny.name}</h3>
+                                <p><strong>Languages:</strong> {nanny.languages || 'Not specified'}</p>
+                                <p><strong>Skills:</strong> {nanny.special_skills || 'Not specified'}</p>
+                                <div className="contact-btn-wrapper">
+                                    <a href={`https://wa.me/${nanny.phone || ''}`} className="contact-btn">Contact</a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
-        </div>
+        </>
     );
 }
 
