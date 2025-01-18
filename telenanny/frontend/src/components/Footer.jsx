@@ -39,9 +39,8 @@ function Footer() {
                 <div className="footer-col">
                     <h4>Website</h4>
                     <ul>
-                        <li><a href="/nannies">Nannies</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/testimonials">Testimonials</a></li>
+                        <li><a href="/allnannies">Nannies</a></li>
+                        <li><a href="/AllPostings">Job postings</a></li>
                         <li><a href="/contact">Contact</a></li>
                     </ul>
                 </div>

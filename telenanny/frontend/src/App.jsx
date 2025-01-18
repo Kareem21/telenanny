@@ -15,18 +15,29 @@ import { Analytics } from '@vercel/analytics/react';
 import "./App.css"; // Global styles
 
 function App() {
+    // Simple 404 Component
+    const NotFound = () => (
+        <div style={{ textAlign: "center", padding: "50px" }}>
+            <h1>404 - Page Not Found</h1>
+            <p>Sorry, the page you are looking for does not exist.</p>
+            <a href="/" style={{ color: "#007bff", textDecoration: "none" }}>
+                Go Back to Home
+            </a>
+        </div>
+    );
+
     return (
         <Router>
             <Navbar></Navbar>
             <Routes>
-
-                <Route path="/" element={<HomePage/>}/>
-                <Route path="/allnannies" element={<AllNannies/>}/>
-                <Route path="/jobform" element={<JobPosting/>}/>
-                <Route path="/nannyform" element={<NannyForm/>}/>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/allnannies" element={<AllNannies />} />
+                <Route path="/jobform" element={<JobPosting />} />
+                <Route path="/nannyform" element={<NannyForm />} />
                 <Route path="/allpostings" element={<AllPostings />} />
-                <Route path="/contact" elements ={<Contact/>} />
-
+                <Route path="/contact" element={<Contact />} />
+                {/* Catch-all route for undefined paths */}
+                <Route path="*" element={<NotFound />} />
             </Routes>
             <a
                 href="https://wa.me/+971585639166"
@@ -40,10 +51,8 @@ function App() {
                 />
             </a>
             <Footer></Footer>
-
             <Analytics />
         </Router>
-
     );
 }
 
