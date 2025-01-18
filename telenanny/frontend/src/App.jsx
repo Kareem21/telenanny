@@ -9,6 +9,7 @@ import NannyForm from "./components/NannyForm";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AllPostings from "./components/AllPostings";
+import Contact from "./components/Contact";
 import { Analytics } from '@vercel/analytics/react';
 
 import "./App.css"; // Global styles
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/jobform" element={<JobPosting/>}/>
                 <Route path="/nannyform" element={<NannyForm/>}/>
                 <Route path="/allpostings" element={<AllPostings />} />
+                <Route path="/contact" elements ={<Contact/>} />
 
             </Routes>
             <a

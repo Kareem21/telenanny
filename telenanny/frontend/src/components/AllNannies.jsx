@@ -35,22 +35,32 @@ function AllNannies() {
         fetchNannies();
     }, []);
 
-    // Derived list after filters
-    const filteredNannies = nannies.filter(nanny => {
-        // Filter by language
-        if (filterLang && nanny.languages) {
-            if (!nanny.languages.includes(filterLang)) {
-                return false;
+    // Derived list after filters and sorting
+    const filteredAndSortedNannies = nannies
+        .filter(nanny => {
+            // Filter by language
+            if (filterLang && nanny.languages) {
+                if (!nanny.languages.includes(filterLang)) {
+                    return false;
+                }
             }
-        }
-        // Filter by nationality
-        if (filterNationality && nanny.nationality) {
-            if (nanny.nationality.toLowerCase() !== filterNationality.toLowerCase()) {
-                return false;
+            // Filter by nationality
+            if (filterNationality && nanny.nationality) {
+                if (nanny.nationality.toLowerCase() !== filterNationality.toLowerCase()) {
+                    return false;
+                }
             }
-        }
-        return true;
-    });
+            return true;
+        })
+        .sort((a, b) => {
+            const hasRussianA = a.languages && a.languages.includes('Russian');
+            const hasRussianB = b.languages && b.languages.includes('Russian');
+
+            // Sort Russian speakers to the top
+            if (hasRussianA && !hasRussianB) return -1;
+            if (!hasRussianA && hasRussianB) return 1;
+            return 0; // Maintain original order for others
+        });
 
     return (
         <>
@@ -86,7 +96,7 @@ function AllNannies() {
                     <p>Loading nannies...</p>
                 ) : (
                     <div className="nannies-grid">
-                        {filteredNannies.map((nanny) => (
+                        {filteredAndSortedNannies.map((nanny) => (
                             <div className="nanny-card" key={nanny.user_id}>
                                 <img
                                     src={nanny.profile_image_url || 'https://via.placeholder.com/150'}
