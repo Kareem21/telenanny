@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "vite-plugin-radar": "^0.10.0"
+  }
+}
